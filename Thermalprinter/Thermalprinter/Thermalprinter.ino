@@ -1,5 +1,8 @@
-#include <SoftwareSerial.h>
-SoftwareSerial Thermal(10, 9); //Soft RX from printer on D2, soft TX out to printer on D3
+#include <HardwareSerial.h>
+
+// Create an instance of HardwareSerial for UART1
+HardwareSerial Thermal(1);
+//SoftwareSerial Thermal(10, 9); //Soft RX from printer on D2, soft TX out to printer on D3
 
 #define FALSE  0
 #define TRUE  1
@@ -14,9 +17,10 @@ char printBreakTime = 15; //Not sure what the defaut is. Testing shows the max h
 
 void setup() {
   pinMode(ledPin, OUTPUT);
+  Thermal.begin(19200, SERIAL_8N1, 9, 10);
 
   Serial.begin(9600); //Use hardware serial for debugging
-  Thermal.begin(19200); //Setup soft serial for ThermalPrinter control
+  //Thermal.begin(19200); //Setup soft serial for ThermalPrinter control
 
   printOnBlack = FALSE;
   printUpSideDown = FALSE;
