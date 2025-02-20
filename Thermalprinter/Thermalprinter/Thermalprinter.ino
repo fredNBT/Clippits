@@ -17,7 +17,7 @@ char printBreakTime = 15; //Not sure what the defaut is. Testing shows the max h
 
 void setup() {
   pinMode(ledPin, OUTPUT);
-  Thermal.begin(19200, SERIAL_8N1, 9, 10);
+  Thermal.begin(9600, SERIAL_8N1, 27, 25);
 
   Serial.begin(9600); //Use hardware serial for debugging
   //Thermal.begin(19200); //Setup soft serial for ThermalPrinter control
@@ -25,21 +25,21 @@ void setup() {
   printOnBlack = FALSE;
   printUpSideDown = FALSE;
 
-  //Modify the print speed and heat
-  Thermal.write(27);
-  Thermal.write(55);
-  Thermal.write(7); //Default 64 dots = 8*('7'+1)
-  Thermal.write(heatTime); //Default 80 or 800us
-  Thermal.write(heatInterval); //Default 2 or 20us
+  // //Modify the print speed and heat
+  // Thermal.write(27);
+  // Thermal.write(55);
+  // Thermal.write(7); //Default 64 dots = 8*('7'+1)
+  // Thermal.write(heatTime); //Default 80 or 800us
+  // Thermal.write(heatInterval); //Default 2 or 20us
 
-  //Modify the print density and timeout
-  Thermal.write(18);
-  Thermal.write(35);
-  int printSetting = (printDensity<<4) | printBreakTime;
-  Thermal.write(printSetting); //Combination of printDensity and printBreakTime
+  // //Modify the print density and timeout
+  // Thermal.write(18);
+  // Thermal.write(35);
+  // int printSetting = (printDensity<<4) | printBreakTime;
+  // Thermal.write(printSetting); //Combination of printDensity and printBreakTime
 
-  Serial.println();
-  Serial.println("Parameters set");
+  // Serial.println();
+  // Serial.println("Parameters set");
 }
 
 void loop() {

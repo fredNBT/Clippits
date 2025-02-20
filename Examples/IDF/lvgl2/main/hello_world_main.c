@@ -180,7 +180,7 @@ void app_main(void)
     lv_obj_t* bar = lv_bar_create(lv_screen_active());  
     lv_bar_set_value(bar, 50, LV_ANIM_OFF);
     lv_obj_set_pos(bar, 10, 420);
-     //lv_obj_t* kb = lv_keyboard_create(lv_screen_active());
+    lv_obj_t* kb = lv_keyboard_create(lv_screen_active());
      //lv_keyboard_set_mode(kb, LV_KEYBOARD_MODE_NUMBER);
 
    // lv_obj_center(bar);

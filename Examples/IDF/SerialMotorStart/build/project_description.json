@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "SerialMotorStart",
-    "project_version":    "760aaa8-dirty",
+    "project_version":    "d095b8d-dirty",
     "project_path":       "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/Examples/IDF/SerialMotorStart",
     "idf_path":           "C:/Users/fred/esp/v5.2.2/esp-idf",
     "build_dir":          "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/Examples/IDF/SerialMotorStart/build",
