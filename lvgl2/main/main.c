@@ -7,6 +7,8 @@
 #include "freertos/task.h"
 #include "lvgl.h"
 #include "esp_lcd_ili9488.h"
+#define LV_USE_XPT2046 1
+#include "lv_drivers/indev/xpt2046.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_log.h"
 #include "esp_lcd_panel_io.h"
@@ -24,6 +26,7 @@
 #define UART_NUM UART_NUM_0  // Use UART0 (USB Serial Monitor)
 #define BUF_SIZE 1024
 #include "driver/ledc.h"
+#define LV_USE_XPT2046 1
 
 #define LCD_PIXEL_CLOCK_HZ (20 * 1000 * 1000)
 #define LCD_CMD_BITS 8

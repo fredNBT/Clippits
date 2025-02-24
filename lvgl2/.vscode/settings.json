@@ -8,6 +8,7 @@
     "idf.toolsPathWin": "C:\\Users\\fred\\.espressif",
     "idf.flashType": "UART",
     "files.associations": {
-       "basicimage.h": "c"
+        "basicimage.h": "c",
+        "esp_lcd_panel_vendor.h": "c"
     }
 }

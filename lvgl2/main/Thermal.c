@@ -2,7 +2,7 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include <string.h>
-#define UART_NUM UART_NUM_2  // Use UART1 or another available UART
+#define UART_NUM UART_NUM_1  // Use UART1 or another available UART
 #define TXD_PIN 25           
  #define RXD_PIN 27  
 #define BUF_SIZE 1024
@@ -22,8 +22,8 @@ void uart_init()
     uart_set_pin(UART_NUM, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 }
 void print_text(const char *text) {
-    uart_write_bytes(UART_NUM_2, text, strlen(text));  // Send text
-    uart_write_bytes(UART_NUM_2, "\n", 1);             // Send newline (LF)
+    uart_write_bytes(UART_NUM, text, strlen(text));  // Send text
+    uart_write_bytes(UART_NUM, "\n", 1);             // Send newline (LF)
 }
 
 
