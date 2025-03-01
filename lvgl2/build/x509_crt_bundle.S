@@ -1,4 +1,4 @@
-/* * Data converted from C:/Users/fred/Desktop/EspProjects/lvgl2/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 #if !defined (__APPLE__) && !defined (__linux__)

@@ -47,7 +47,6 @@ printf("🚀 Starting touch init...\n");
 
     // Initialize touch
     touch_init();
-
     // Create a task to read touch data
     xTaskCreate(touch_read_task, "touch_task", 4096, NULL, 5, NULL);
 }
@@ -88,7 +87,6 @@ void touch_init() {
     printf("🟢 Creating SPI Panel I/O...\n");
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI2_HOST, &io_config, &touch_io));
     printf("✅ SPI Panel I/O created!\n");
-
     // Touch configuration
     esp_lcd_touch_config_t touch_config = {
         .x_max = 480,
@@ -102,7 +100,6 @@ void touch_init() {
         },
         .user_data = NULL
     };
-
     printf("🟢 Initializing XPT2046 touch...\n");
     ESP_ERROR_CHECK(esp_lcd_touch_new_spi_xpt2046(touch_io, &touch_config, &tp));
     printf("✅ Touch initialized successfully!\n");
@@ -122,7 +119,6 @@ void touch_read_task(void *pvParameter) {
                 printf("🖐 Touch detected at: X=%d, Y=%d\n", touch_x, touch_y);
             }
         }
-
         vTaskDelay(pdMS_TO_TICKS(100));  // Read every 100ms
     }
 }

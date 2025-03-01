@@ -10,18 +10,18 @@ if(NOT EXISTS "C:/Users/fred/esp/v5.4/esp-idf/components/bootloader/subproject")
   file(MAKE_DIRECTORY "C:/Users/fred/esp/v5.4/esp-idf/components/bootloader/subproject")
 endif()
 file(MAKE_DIRECTORY
-  "C:/Users/fred/Desktop/EspProjects/lvgl2/build/bootloader"
-  "C:/Users/fred/Desktop/EspProjects/lvgl2/build/bootloader-prefix"
-  "C:/Users/fred/Desktop/EspProjects/lvgl2/build/bootloader-prefix/tmp"
-  "C:/Users/fred/Desktop/EspProjects/lvgl2/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Users/fred/Desktop/EspProjects/lvgl2/build/bootloader-prefix/src"
-  "C:/Users/fred/Desktop/EspProjects/lvgl2/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader"
+  "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader-prefix"
+  "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader-prefix/tmp"
+  "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader-prefix/src"
+  "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/fred/Desktop/EspProjects/lvgl2/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/fred/Desktop/EspProjects/lvgl2/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

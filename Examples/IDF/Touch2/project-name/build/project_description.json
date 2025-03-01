@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "project-name",
-    "project_version":    "2caf54d-dirty",
+    "project_version":    "0cdaebc-dirty",
     "project_path":       "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/Examples/IDF/Touch2/project-name",
     "idf_path":           "C:/Users/fred/esp/v5.4/esp-idf",
     "build_dir":          "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/Examples/IDF/Touch2/project-name/build",

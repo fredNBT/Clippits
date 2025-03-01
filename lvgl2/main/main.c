@@ -8,7 +8,6 @@
 #include "lvgl.h"
 #include "esp_lcd_ili9488.h"
 #define LV_USE_XPT2046 1
-#include "lv_drivers/indev/xpt2046.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_log.h"
 #include "esp_lcd_panel_io.h"
@@ -23,6 +22,9 @@
 #include "Screens/Screens.h"
 #include "pins.h"
 #include "Thermal.h"
+#include "esp_lcd_touch_xpt2046.h"
+#include "touch.h"
+
 #define UART_NUM UART_NUM_0  // Use UART0 (USB Serial Monitor)
 #define BUF_SIZE 1024
 #include "driver/ledc.h"
@@ -34,9 +36,27 @@
 #define LCD_H_RES 320
 #define LCD_V_RES 480
 #define LVGL_TICK_PERIOD_MS 2
+
+// Touch handle
+//esp_lcd_touch_handle_t tp;
+
+// Function prototypes
+void touch_init();
+//void touch_read_task(void *pvParameter);
+void MakeLabel();
+
 static QueueHandle_t screentext;
 wigits_t wigits;
 lv_timer_t* timer;
+
+static void on_pointer(lv_indev_t *indev, lv_indev_data_t *data)
+{
+    touch_t touch;
+    touch_read_task(&touch);
+    data->point.x = touch.x;
+    data->point.y = touch.y;
+    data->state = touch.is_touched ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
+}
 
 void update_label(void *param) {
     screentext_t *data = (screentext_t *)param;
@@ -77,7 +97,6 @@ void uart_task(void *arg) {
     
     while (1) {
         int len = uart_read_bytes(UART_NUM, data, BUF_SIZE - 1, pdMS_TO_TICKS(200));
-
         data[len] = '\0';  // Null-terminate the string
             if (len > 0){
                 screentext_t receive_payload = {};
@@ -85,25 +104,7 @@ void uart_task(void *arg) {
                 xQueueSend(screentext,&receive_payload,1000);
             if (data[0] == '1') 
             {
-                const char *textToPrint = lv_label_get_text(wigits.label);
-                print_text("\n\n");
-                print_text(textToPrint);
-                print_text("\n\n");
-                lv_async_call(clear_label, NULL);
-                lv_timer_resume(timer);
-                  ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
-                  ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0); // Apply change
-                  printf("Moter Baby Motor\n");
-                  printf("Moving stepper forward...\n");
-                  gpio_set_level(Stepper_DIR, 1);  // Set direction to forward
-                  set_stepper_speed(4000);  // Set step pulse frequency to 6000 Hz
-                  vTaskDelay(pdMS_TO_TICKS(10000));  // Run for 2s
-                  ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
-                  lv_timer_pause(timer);
-                  lv_bar_set_value(wigits.ProgressBar,0,false);
-                  time = 0;
-                  
-
+                MakeLabel();
             }else if(data[0] == 'n' || data[0] == 'n' )
             {
                   ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
@@ -123,8 +124,8 @@ esp_lcd_panel_handle_t *init_display(void)
 {
     spi_bus_config_t bus_config = {
         .mosi_io_num = LCD_SDI_MOSI,
-        .miso_io_num = LCD_SDO_MISO,
         .sclk_io_num = LCD_SCK_SCLK,
+        .miso_io_num = TOUCH_MISO,
         .quadwp_io_num = -1,
         .quadhd_io_num = -1,
         .max_transfer_sz = 0,
@@ -213,6 +214,7 @@ void app_main(void)
     xTaskCreate(uart_task, "uart_task", 4096, NULL, 5, NULL);
     xTaskCreate(&queue_listener_task, "Queue Listener", 4096, NULL, 5, NULL);
 
+
     timer = lv_timer_create(on_timer, 100, NULL);
     lv_timer_pause(timer);
 
@@ -223,11 +225,110 @@ void app_main(void)
     switch_screen(screens.home);
 
     uart_init();
-    
+    touch_init();
+    //xTaskCreate(touch_read_task, "touch_task", 4096, NULL, 5, NULL);
+    touch_t touch;
+    touch_read_task(&touch);
 
+    lv_indev_t *pointer = lv_indev_create();
+    lv_indev_set_type(pointer, LV_INDEV_TYPE_POINTER);
+    lv_indev_set_read_cb(pointer, on_pointer);
+
+    lv_obj_t *icon = lv_label_create(lv_screen_active());
+    lv_label_set_text(icon, LV_SYMBOL_UP);
+    lv_obj_set_style_text_color(icon, lv_palette_main(LV_PALETTE_PINK), 0);
+
+    lv_indev_set_cursor(pointer, icon);
     while (true)
     {
         vTaskDelay(pdMS_TO_TICKS(10));
         lv_timer_handler();
     }
 }
+
+
+
+// void touch_init() {
+//     printf("🟢 Initializing SPI bus...\n");
+
+//     printf("✅ SPI bus initialized!\n");
+
+//     // Configure SPI panel I/O
+//     esp_lcd_panel_io_handle_t touch_io;
+//     esp_lcd_panel_io_spi_config_t io_config = {
+//         .cs_gpio_num = TOUCH_CS,
+//         .dc_gpio_num = -1,
+//         .spi_mode = 0,
+//         .pclk_hz = 500 * 1000,  // Lower speed for stability
+//         .trans_queue_depth = 10,
+//         .on_color_trans_done = NULL,
+//         .user_ctx = NULL,
+//         .lcd_cmd_bits = 8,
+//         .lcd_param_bits = 8,
+//         .flags = {
+//             .dc_low_on_data = 0,
+//             .cs_high_active = 0
+//         }
+//     };
+
+//     printf("🟢 Creating SPI Panel I/O...\n");
+//     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI2_HOST, &io_config, &touch_io));
+//     printf("✅ SPI Panel I/O created!\n");
+//     // Touch configuration
+//     esp_lcd_touch_config_t touch_config = {
+//         .x_max = 480,
+//         .y_max = 320,
+//         .rst_gpio_num = -1,
+//         .int_gpio_num = -1,
+//         .flags = {
+//             .swap_xy = 1,  // Change if X/Y are swapped
+//             .mirror_x = 0, // Change if X-axis is flipped
+//             .mirror_y = 0  // Change if Y-axis is flipped
+//         },
+//         .user_data = NULL
+//     };
+//     printf("🟢 Initializing XPT2046 touch...\n");
+//     ESP_ERROR_CHECK(esp_lcd_touch_new_spi_xpt2046(touch_io, &touch_config, &tp));
+//     printf("✅ Touch initialized successfully!\n");
+// }
+
+// void touch_read_task(void *pvParameter) {
+//     uint16_t touch_x, touch_y;
+//     uint8_t point_num = 0;
+
+//     while (1) {
+//         // Read touch data
+//         esp_lcd_touch_read_data(tp);
+
+//         if (esp_lcd_touch_get_coordinates(tp, &touch_x, &touch_y, NULL, &point_num, 1)) {
+//             if (point_num > 0) {
+//                 printf("🖐 Touch detected at: X=%d, Y=%d\n", touch_x, touch_y);
+//             }
+//         }
+//         vTaskDelay(pdMS_TO_TICKS(100));  // Read every 100ms
+//     }
+// }
+
+void MakeLabel(){
+    const char *textToPrint = lv_label_get_text(wigits.label);
+    print_text("\n\n");
+    print_text(textToPrint);
+    print_text("\n\n");
+    lv_async_call(clear_label, NULL);
+    lv_timer_resume(timer);
+      ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
+      ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0); // Apply change
+      printf("Moter Baby Motor\n");
+      printf("Moving stepper forward...\n");
+      gpio_set_level(Stepper_DIR, 1);  // Set direction to forward
+      set_stepper_speed(4000);  // Set step pulse frequency to 6000 Hz
+      vTaskDelay(pdMS_TO_TICKS(10000));  // Run for 2s
+      ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
+      lv_timer_pause(timer);
+      lv_bar_set_value(wigits.ProgressBar,0,false);
+      time = 0;
+
+}
+
+
+
