@@ -19,6 +19,9 @@ extern wigits_t wigits;
 
     void CreateScreens(void);
     void switch_screen(lv_obj_t *screen);  // Function prototype
+    static void btn_event_cb(lv_event_t * e);
+    void HomeScreen(void);
+    void SplashScreen(void);
 #ifdef __cplusplus
 }
 #endif  
