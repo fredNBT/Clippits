@@ -42,7 +42,6 @@
 
 // Function prototypes
 void touch_init();
-//void touch_read_task(void *pvParameter);
 void MakeLabel();
 
 static QueueHandle_t screentext;
@@ -58,17 +57,7 @@ static void on_pointer(lv_indev_t *indev, lv_indev_data_t *data)
     data->state = touch.is_touched ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
 }
 
-void update_label(void *param) {
-    screentext_t *data = (screentext_t *)param;
-    const char *current_text = lv_label_get_text(wigits.label);
-    char new_text[128];
-    snprintf(new_text, sizeof(new_text), "%s%c", current_text, data->value);
-    lv_label_set_text(wigits.label, new_text);  // Update label
-    free(data);
-}
-void clear_label(void *param) {
-    lv_label_set_text(wigits.label, "");  // Update label
-}
+
 
 void queue_listener_task(void *pvParameter) {
     screentext_t received_text;  // Buffer to store received message
@@ -79,12 +68,10 @@ void queue_listener_task(void *pvParameter) {
             printf("Received from queue: %c\n", received_text.value);
             screentext_t *data = malloc(sizeof(screentext_t));
             memcpy(data, &received_text, sizeof(screentext_t));
-            lv_async_call(update_label, data);  // Schedule label update
         }
     }
 }
-
-static int time = 0;
+int time = 0;
 void on_timer(lv_timer_t* timer)
 {
     time++;
@@ -104,7 +91,7 @@ void uart_task(void *arg) {
                 xQueueSend(screentext,&receive_payload,1000);
             if (data[0] == '1') 
             {
-                MakeLabel();
+              
             }else if(data[0] == 'n' || data[0] == 'n' )
             {
                   ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
@@ -181,9 +168,7 @@ static void lvgl_tick(void *arg)
 
 void app_main(void)
 {
-    printf("Hello world!\n");
     esp_lcd_panel_handle_t *panel_handle = init_display();
-    printf("Hello init!\n");
     lv_init();
     lv_display_t *lv_display = lv_display_create(LCD_H_RES, LCD_V_RES);
 
@@ -192,7 +177,6 @@ void app_main(void)
     assert(buf1);
     lv_color_t *buf2 = heap_caps_malloc(buf_size, MALLOC_CAP_DMA);
     assert(buf2);
-
     lv_display_set_buffers(lv_display, buf1, buf2, buf_size, LV_DISPLAY_RENDER_MODE_PARTIAL);
     lv_display_set_resolution(lv_display, LCD_H_RES, LCD_V_RES);
     lv_display_set_user_data(lv_display, panel_handle);
@@ -226,7 +210,6 @@ void app_main(void)
 
     uart_init();
     touch_init();
-    //xTaskCreate(touch_read_task, "touch_task", 4096, NULL, 5, NULL);
     touch_t touch;
     touch_read_task(&touch);
 
@@ -247,88 +230,23 @@ void app_main(void)
 }
 
 
-
-// void touch_init() {
-//     printf("🟢 Initializing SPI bus...\n");
-
-//     printf("✅ SPI bus initialized!\n");
-
-//     // Configure SPI panel I/O
-//     esp_lcd_panel_io_handle_t touch_io;
-//     esp_lcd_panel_io_spi_config_t io_config = {
-//         .cs_gpio_num = TOUCH_CS,
-//         .dc_gpio_num = -1,
-//         .spi_mode = 0,
-//         .pclk_hz = 500 * 1000,  // Lower speed for stability
-//         .trans_queue_depth = 10,
-//         .on_color_trans_done = NULL,
-//         .user_ctx = NULL,
-//         .lcd_cmd_bits = 8,
-//         .lcd_param_bits = 8,
-//         .flags = {
-//             .dc_low_on_data = 0,
-//             .cs_high_active = 0
-//         }
-//     };
-
-//     printf("🟢 Creating SPI Panel I/O...\n");
-//     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI2_HOST, &io_config, &touch_io));
-//     printf("✅ SPI Panel I/O created!\n");
-//     // Touch configuration
-//     esp_lcd_touch_config_t touch_config = {
-//         .x_max = 480,
-//         .y_max = 320,
-//         .rst_gpio_num = -1,
-//         .int_gpio_num = -1,
-//         .flags = {
-//             .swap_xy = 1,  // Change if X/Y are swapped
-//             .mirror_x = 0, // Change if X-axis is flipped
-//             .mirror_y = 0  // Change if Y-axis is flipped
-//         },
-//         .user_data = NULL
-//     };
-//     printf("🟢 Initializing XPT2046 touch...\n");
-//     ESP_ERROR_CHECK(esp_lcd_touch_new_spi_xpt2046(touch_io, &touch_config, &tp));
-//     printf("✅ Touch initialized successfully!\n");
+// void MakeLabel(){
+//     print_text("\n\n");
+//     print_text("textToPrint");
+//     print_text("\n\n");
+//     lv_timer_resume(timer);
+//       ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
+//       ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0); // Apply change
+//       printf("Moter Baby Motor\n");
+//       printf("Moving stepper forward...\n");
+//       gpio_set_level(Stepper_DIR, 1);  // Set direction to forward
+//       set_stepper_speed(4000);  // Set step pulse frequency to 6000 Hz
+//       vTaskDelay(pdMS_TO_TICKS(10000));  // Run for 2s
+//       ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
+//       lv_timer_pause(timer);
+//       lv_bar_set_value(wigits.ProgressBar,0,false);
+//       time = 0;
 // }
-
-// void touch_read_task(void *pvParameter) {
-//     uint16_t touch_x, touch_y;
-//     uint8_t point_num = 0;
-
-//     while (1) {
-//         // Read touch data
-//         esp_lcd_touch_read_data(tp);
-
-//         if (esp_lcd_touch_get_coordinates(tp, &touch_x, &touch_y, NULL, &point_num, 1)) {
-//             if (point_num > 0) {
-//                 printf("🖐 Touch detected at: X=%d, Y=%d\n", touch_x, touch_y);
-//             }
-//         }
-//         vTaskDelay(pdMS_TO_TICKS(100));  // Read every 100ms
-//     }
-// }
-
-void MakeLabel(){
-    const char *textToPrint = lv_label_get_text(wigits.label);
-    print_text("\n\n");
-    print_text(textToPrint);
-    print_text("\n\n");
-    lv_async_call(clear_label, NULL);
-    lv_timer_resume(timer);
-      ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
-      ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0); // Apply change
-      printf("Moter Baby Motor\n");
-      printf("Moving stepper forward...\n");
-      gpio_set_level(Stepper_DIR, 1);  // Set direction to forward
-      set_stepper_speed(4000);  // Set step pulse frequency to 6000 Hz
-      vTaskDelay(pdMS_TO_TICKS(10000));  // Run for 2s
-      ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
-      lv_timer_pause(timer);
-      lv_bar_set_value(wigits.ProgressBar,0,false);
-      time = 0;
-
-}
 
 
 

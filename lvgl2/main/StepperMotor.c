@@ -3,6 +3,12 @@
 #include "driver/gpio.h"
 #include "driver/ledc.h"
 #include "StepperMotor.h"
+#include "Screens/Screens.h"
+#include "Thermal.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+//wigits_t wigits;
+//lv_timer_t* timer;
 void setup_stepper() {
     // Configure Direction Pin
     gpio_config_t config = {
@@ -39,4 +45,22 @@ void setup_stepper() {
 
 void set_stepper_speed(int frequency) {
     ledc_set_freq(LEDC_HIGH_SPEED_MODE, LEDC_TIMER_0, frequency);
+}
+
+void MakeLabel(){
+    print_text("\n\n");
+    print_text("textToPrint");
+    print_text("\n\n");
+    //lv_timer_resume(timer);
+    //   ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
+    //   ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0); // Apply change
+    //   printf("Moter Baby Motor\n");
+    //   printf("Moving stepper forward...\n");
+    //   gpio_set_level(Stepper_DIR, 1);  // Set direction to forward
+    //   set_stepper_speed(4000);  // Set step pulse frequency to 6000 Hz
+    //   vTaskDelay(pdMS_TO_TICKS(10000));  // Run for 2s
+    //   ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
+    //   lv_timer_pause(timer);
+    //   lv_bar_set_value(wigits.ProgressBar,0,false);
+    //   time = 0;
 }

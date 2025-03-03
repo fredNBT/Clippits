@@ -50,8 +50,6 @@ void touch_read_task(touch_t *touch) {
     uint16_t touch_x, touch_y;
     uint8_t point_num = 0;
 
-    //while (1) {
-        // Read touch data
         esp_lcd_touch_read_data(tp);
 
         if (esp_lcd_touch_get_coordinates(tp, &touch_x, &touch_y, NULL, &point_num, 1)) {
@@ -59,8 +57,4 @@ void touch_read_task(touch_t *touch) {
             touch->y = touch_x;
             touch->x = abs(320 - touch_y);
         }
-        //touch->is_touched = 0;
-        //vTaskDelay(pdMS_TO_TICKS(100));  // Read every 100ms
-
-   // }
 }
