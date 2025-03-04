@@ -46,15 +46,25 @@ void touch_init() {
     printf("✅ Touch initialized successfully!\n");
 }
 
+#define Y_MIN 10
+#define Y_MAX 291
+#define X_MIN 28
+#define X_MAX 458
 void touch_read_task(touch_t *touch) {
+
     uint16_t touch_x, touch_y;
     uint8_t point_num = 0;
 
         esp_lcd_touch_read_data(tp);
-
         if (esp_lcd_touch_get_coordinates(tp, &touch_x, &touch_y, NULL, &point_num, 1)) {
+             int16_t cal_x = (touch_x - X_MIN) * 480 / (X_MAX - X_MIN);
+             int16_t cal_y = (touch_y - Y_MIN) * 320 / (Y_MAX - Y_MIN);
+
             touch->is_touched = 1;
-            touch->y = touch_x;
-            touch->x = abs(320 - touch_y);
+            touch->y = cal_x;
+            touch->x = abs(320 - cal_y);
+            // touch->y = touch_x;
+            // touch->x = abs(320 - touch_y);
+            printf("Calibrated: y=%d, x=%d\n", touch->y, touch->x);
         }
 }

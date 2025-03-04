@@ -24,8 +24,12 @@ void uart_init()
 void print_text(const char *text) {
     uart_write_bytes(UART_NUM, text, strlen(text));  // Send text
     uart_write_bytes(UART_NUM, "\n", 1);             // Send newline (LF)
+    uart_write_bytes(UART_NUM, "\n", 1); 
+    uart_write_bytes(UART_NUM, "\n", 1); 
+    uart_write_bytes(UART_NUM, "\n", 1); 
+    uart_write_bytes(UART_NUM, "\n", 1); 
+    uart_write_bytes(UART_NUM, "\n", 1); 
 }
-
 
 void SendTestMessage()
 {

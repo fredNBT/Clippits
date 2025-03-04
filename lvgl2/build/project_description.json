@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "lvgl2",
-    "project_version":    "21856d6b-dirty",
+    "project_version":    "09b722c0-dirty",
     "project_path":       "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2",
     "idf_path":           "C:/Users/fred/esp/v5.4/esp-idf",
     "build_dir":          "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build",

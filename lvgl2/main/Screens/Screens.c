@@ -5,6 +5,7 @@
  #include <stdio.h>
  #include "freertos/FreeRTOS.h"
  #include "freertos/task.h"
+ #include "StepperMotor.h"
 screens_t screens;
 static lv_obj_t * menu_panel;  // Sidebar menu
 static bool menu_open = false; // Menu state
@@ -37,7 +38,7 @@ static const lv_btnmatrix_ctrl_t custom_kb_ctrl_map[] = {
 void update_bar_task(void *pvParameter) {
     lv_obj_t *bar = (lv_obj_t *)pvParameter;
     for (int i = 0; i <= 10; i += 1) {
-        lv_bar_set_value(bar, i*10, LV_ANIM_ON);  // Update bar
+        lv_bar_set_value(bar, i*10, LV_ANIM_OFF);  // Update bar
         lv_task_handler();  // Refresh UI
         vTaskDelay(pdMS_TO_TICKS(500));  // Delay 500ms
     }
@@ -46,17 +47,11 @@ void update_bar_task(void *pvParameter) {
 }
 static void PrintLabel_event_cb(lv_event_t * e) {
     printf("Printing Label\n");
-    print_text("cat");
+    print_text(lv_textarea_get_text(text_input));
     lv_textarea_set_text(text_input, "");  // Set an empty string
+    //MakeLabel();
     xTaskCreate(update_bar_task, "UpdateBar", 4096, (void *)wigits.ProgressBar, 1, NULL);
-
-    
-    // for (int i = 0; i < 10; i++) {
-    //     lv_bar_set_value(wigits.ProgressBar,i*10,false);
-    //     lv_timer_handler();
-
-    //     vTaskDelay(pdMS_TO_TICKS(500));  // Delay 500ms (0.5s)
-    // }
+    xTaskCreate(MakeLabel, "MakeLabel", 4096, NULL, 5, NULL);
 }
 
 static void ChangeToSettings(lv_event_t * e) {
@@ -76,13 +71,33 @@ void CreateScreens() {
 }
 
 void HomeScreen(){
+    static lv_style_t style;
+    lv_style_init(&style);
+    lv_style_set_text_font(&style, &lv_font_montserrat_14); 
+    lv_style_set_text_color(&style, lv_color_hex(0x0000FF)); // Green color
+
+   
+
     screens.home = lv_obj_create(NULL);
     MainContainer = lv_obj_create(screens.home); 
+    lv_obj_t* TopContainer = lv_obj_create(screens.home); 
+    lv_obj_set_style_pad_all(TopContainer, 0, 0); 
+    lv_obj_clear_flag(TopContainer, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_size(TopContainer, 320, 60);              
+    lv_obj_set_pos(TopContainer, 0, 0); 
+    lv_obj_set_style_bg_color(TopContainer, lv_color_hex(0xFFFFFF), 0);  // Set white background
+
+
+    lv_obj_t *wifi_label = lv_label_create(screens.home);
+    lv_label_set_text(wifi_label, LV_SYMBOL_WIFI);
+    lv_obj_align(wifi_label, LV_ALIGN_TOP_RIGHT, -10, 10);
+    lv_obj_add_style(wifi_label, &style, 0);
+
     lv_obj_set_style_pad_all(MainContainer, 0, 0); 
     lv_obj_clear_flag(MainContainer, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_size(MainContainer, 320, 420);                // Set width = 100, height = 50
+    lv_obj_set_size(MainContainer, 320, 420);              
     lv_obj_set_pos(MainContainer, 0, 60); 
-    lv_obj_set_style_bg_color(MainContainer, lv_color_hex(0xFFFFFF), 0);  // Set red background
+    lv_obj_set_style_bg_color(MainContainer, lv_color_hex(0xFFFFFF), 0);  // Set white background
     CreateJustPrint();
 
     // 📌 Create the menu panel (sidebar)
@@ -142,7 +157,7 @@ void CreateJustPrint(){
     lv_obj_set_size(text_input, 320, 80); 
 
     wigits.ProgressBar = lv_bar_create(MainContainer);
-    lv_obj_align(wigits.ProgressBar, LV_ALIGN_TOP_MID, 0, 0);
+    lv_obj_align(wigits.ProgressBar, LV_ALIGN_TOP_MID, 0, 120);
 
     lv_obj_t *PrintButton = lv_btn_create(MainContainer);  // Create button
     lv_obj_set_pos(PrintButton, 200, 370);                // Set position
