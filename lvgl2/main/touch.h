@@ -20,7 +20,7 @@ typedef struct touch_t
     bool is_touched;
 } touch_t;
 
-void touch_init(void);
+void touch_display_init(void);
 void touch_read_task(touch_t *touch);
 
 #endif

@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "lvgl2",
-    "project_version":    "09b722c0-dirty",
+    "project_version":    "1412a9f5-dirty",
     "project_path":       "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2",
     "idf_path":           "C:/Users/fred/esp/v5.4/esp-idf",
     "build_dir":          "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build",
@@ -1250,12 +1250,12 @@
             "dir": "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main",
             "type": "LIBRARY",
             "lib": "__idf_main",
-            "reqs": [],
+            "reqs": [ "esp_wifi", "nvs_flash" ],
             "priv_reqs": [ "spi_flash", "atanisoft__esp_lcd_ili9488", "atanisoft__esp_lcd_touch_xpt2046", "lvgl__lvgl" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "atanisoft__esp_lcd_ili9488", "atanisoft__esp_lcd_touch_xpt2046", "lvgl__lvgl" ],
             "file": "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/main.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/clippits.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/BasicImages.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/Screens.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/StepperMotor", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Thermal.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/touch.c" ],
+            "sources": [ "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/main.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/Screens.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/WiFi.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/StepperMotor", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Thermal.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/touch.c" ],
             "include_dirs": [ ".", "Screens" ]
         },
         "mbedtls": {
@@ -2901,7 +2901,7 @@
             "prefix": "idf",
             "dir": "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main",
             "lib": "__idf_main",
-            "reqs": [],
+            "reqs": [ "esp_wifi", "nvs_flash" ],
             "priv_reqs": [ "spi_flash", "atanisoft__esp_lcd_ili9488", "atanisoft__esp_lcd_touch_xpt2046", "lvgl__lvgl" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "atanisoft__esp_lcd_ili9488", "atanisoft__esp_lcd_touch_xpt2046", "lvgl__lvgl" ],

@@ -24,7 +24,7 @@ void setup_stepper() {
         .speed_mode = LEDC_HIGH_SPEED_MODE,
         .duty_resolution = LEDC_TIMER_1_BIT,  // 1-bit resolution (on/off)
         .timer_num = LEDC_TIMER_0,
-        .freq_hz = 1000,  // Initial frequency (1000 Hz)
+        .freq_hz = 1000,  // Initial frequency (1000 Hz) setting this to 0 cuses a problem
         .clk_cfg = LEDC_AUTO_CLK
     };
     ledc_timer_config(&ledc_timer);
@@ -39,6 +39,7 @@ void setup_stepper() {
         .hpoint = 0
     };
     ledc_channel_config(&ledc_channel);
+    ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
 }
 
 void set_stepper_speed(int frequency) {
@@ -46,13 +47,24 @@ void set_stepper_speed(int frequency) {
 }
 
 void MakeLabel(){
+      printf("making label");
       ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
       ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0); // Apply change
-      printf("Moter Baby Motor\n");
-      printf("Moving stepper forward...\n");
       gpio_set_level(Stepper_DIR, 1);  // Set direction to forward
       set_stepper_speed(2000);  // Set step pulse frequency to 6000 Hz
       vTaskDelay(pdMS_TO_TICKS(10000));  // Run for 2s
       ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
       vTaskDelete(NULL);  // Delete task when done
 }
+
+void NudgeBarrel(bool dir){
+    ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
+    ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0); // Apply change
+    gpio_set_level(Stepper_DIR, dir);  // Set direction to forward
+    if(dir){printf("forwards");}
+    set_stepper_speed(2000);  // Set step pulse frequency to 6000 Hz
+    vTaskDelay(pdMS_TO_TICKS(100));  // Run for 2s
+    ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
+    //vTaskDelete(NULL);  // Delete task when done
+}
+

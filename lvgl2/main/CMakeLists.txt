@@ -1,6 +1,11 @@
-idf_component_register(SRCS  "main.c" "clippits.c" "BasicImages.c"  "Screens/Screens.c" "StepperMotor" "Thermal.c" "touch.c"
+idf_component_register(SRCS  "main.c" "Screens/Screens.c" "WiFi.c" "StepperMotor" "Thermal.c" "touch.c"
                     PRIV_REQUIRES spi_flash
                     INCLUDE_DIRS
                     "."
                     "Screens"
+                    REQUIRES esp_wifi
+                    REQUIRES nvs_flash
                     )
+
+
+                   

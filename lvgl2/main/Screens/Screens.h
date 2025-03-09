@@ -24,6 +24,8 @@ extern wigits_t wigits;
     void SplashScreen(void);
     void CreateJustPrint(void);
     void CreateWifiSettings(void);
+    void CreateCalibration(void);
+    static void buildPWMsgBox(void);
 #ifdef __cplusplus
 }
 #endif  

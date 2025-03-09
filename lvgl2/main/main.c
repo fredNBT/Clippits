@@ -14,16 +14,15 @@
 #include "esp_lcd_panel_vendor.h"
 #include "driver/gpio.h"
 #include "esp_timer.h"
-#include "BasicImage.h"
 #include <string.h>
 #include "StepperMotor.h"
 #define TAG "LCD_LVGL"
-#include "process_x.h"
 #include "Screens/Screens.h"
 #include "pins.h"
 #include "Thermal.h"
 #include "esp_lcd_touch_xpt2046.h"
 #include "touch.h"
+#include "WiFi.h"
 
 #define UART_NUM UART_NUM_0  // Use UART0 (USB Serial Monitor)
 #define BUF_SIZE 1024
@@ -37,16 +36,8 @@
 #define LCD_V_RES 480
 #define LVGL_TICK_PERIOD_MS 2
 
-// Touch handle
-//esp_lcd_touch_handle_t tp;
-
-// Function prototypes
-void touch_init();
-void MakeLabel();
-
-static QueueHandle_t screentext;
-wigits_t wigits;
-lv_timer_t* timer;
+ wigits_t wigits;
+ 
 
 static void on_pointer(lv_indev_t *indev, lv_indev_data_t *data)
 {
@@ -56,56 +47,6 @@ static void on_pointer(lv_indev_t *indev, lv_indev_data_t *data)
     data->point.y = touch.y;
     data->state = touch.is_touched ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
 }
-
-
-
-void queue_listener_task(void *pvParameter) {
-    screentext_t received_text;  // Buffer to store received message
-
-    while (1) {
-        // Wait indefinitely for data to arrive
-        if (xQueueReceive(screentext, &received_text, portMAX_DELAY) == pdTRUE) {
-            printf("Received from queue: %c\n", received_text.value);
-            screentext_t *data = malloc(sizeof(screentext_t));
-            memcpy(data, &received_text, sizeof(screentext_t));
-        }
-    }
-}
-int time = 0;
-void on_timer(lv_timer_t* timer)
-{
-    time++;
-    lv_bar_set_value(wigits.ProgressBar,time,false);
-}
-
-char rx_buffer[BUF_SIZE];
-void uart_task(void *arg) {
-    uint8_t data[BUF_SIZE];
-    
-    while (1) {
-        int len = uart_read_bytes(UART_NUM, data, BUF_SIZE - 1, pdMS_TO_TICKS(200));
-        data[len] = '\0';  // Null-terminate the string
-            if (len > 0){
-                screentext_t receive_payload = {};
-                receive_payload.value = data[0];
-                xQueueSend(screentext,&receive_payload,1000);
-            if (data[0] == '1') 
-            {
-              
-            }else if(data[0] == 'n' || data[0] == 'n' )
-            {
-                  ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 1); // Set duty cycle
-                  ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0); // Apply change
-                  printf("Nurge\n");
-                  printf("Moving stepper forward...\n");
-                  gpio_set_level(Stepper_DIR, 1);  // Set direction to forward
-                  set_stepper_speed(4000);  // Set step pulse frequency to 6000 Hz
-                  vTaskDelay(pdMS_TO_TICKS(100));  // Run for 2s
-                  ledc_stop(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, 0); 
-                }
-            }
-        }
-    }
 
 esp_lcd_panel_handle_t *init_display(void)
 {
@@ -191,17 +132,8 @@ void app_main(void)
     esp_timer_create(&lvgl_tick_timer_args, &lvgl_tick_timer);
     esp_timer_start_periodic(lvgl_tick_timer, LVGL_TICK_PERIOD_MS * 1000);
     
-    screentext = xQueueCreate(10,sizeof(screentext_t));
+    //screentext = xQueueCreate(10,sizeof(screentext_t));
     setup_stepper();
-
-    uart_driver_install(UART_NUM, BUF_SIZE, 0, 0, NULL, 0);  // Initialize UART
-    xTaskCreate(uart_task, "uart_task", 4096, NULL, 5, NULL);
-    xTaskCreate(&queue_listener_task, "Queue Listener", 4096, NULL, 5, NULL);
-
-
-    timer = lv_timer_create(on_timer, 100, NULL);
-    lv_timer_pause(timer);
-
     CreateScreens();
     switch_screen(screens.splash); 
     lv_timer_handler();
@@ -209,7 +141,7 @@ void app_main(void)
     switch_screen(screens.home);
 
     uart_init();
-    touch_init();
+    touch_display_init();
     touch_t touch;
     touch_read_task(&touch);
 
@@ -222,6 +154,10 @@ void app_main(void)
     lv_obj_set_style_text_color(icon, lv_palette_main(LV_PALETTE_PINK), 0);
 
     lv_indev_set_cursor(pointer, icon);
+    // printf("Free heap: %lu bytes\n", (unsigned long)esp_get_free_heap_size());
+    
+    // printf("Free heap: %lu bytes\n", (unsigned long)esp_get_free_heap_size());
+    InitWifi();
     while (true)
     {
         vTaskDelay(pdMS_TO_TICKS(10));

@@ -2,7 +2,7 @@
 #include "pins.h"
 #include "esp_lcd_touch_xpt2046.h"
 
-void touch_init() {
+void touch_display_init() {
     printf("🟢 Initializing SPI bus...\n");
 
     printf("✅ SPI bus initialized!\n");
@@ -65,6 +65,6 @@ void touch_read_task(touch_t *touch) {
             touch->x = abs(320 - cal_y);
             // touch->y = touch_x;
             // touch->x = abs(320 - touch_y);
-            printf("Calibrated: y=%d, x=%d\n", touch->y, touch->x);
+            //printf("Calibrated: y=%d, x=%d\n", touch->y, touch->x);
         }
 }

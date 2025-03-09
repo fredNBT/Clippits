@@ -3,6 +3,6 @@
 
 void setup_stepper(void);
 void set_stepper_speed(int frequency);
-//int time = 0;
-
+void MakeLabel();
+void NudgeBarrel(bool dir);
 #endif 
