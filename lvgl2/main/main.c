@@ -160,7 +160,7 @@ void app_main(void)
     InitWifi();
     while (true)
     {
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay(pdMS_TO_TICKS(20));
         lv_timer_handler();
     }
 }
