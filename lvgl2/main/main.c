@@ -23,6 +23,8 @@
 #include "esp_lcd_touch_xpt2046.h"
 #include "touch.h"
 #include "WiFi.h"
+#include "esp_heap_caps.h"
+
 
 #define UART_NUM UART_NUM_0  // Use UART0 (USB Serial Monitor)
 #define BUF_SIZE 1024
@@ -38,7 +40,27 @@
 
  wigits_t wigits;
  
+ void print_heap_info() {
+    multi_heap_info_t info;
+    heap_caps_get_info(&info, MALLOC_CAP_DEFAULT);
 
+    printf("Free heap: %lu bytes\n", (unsigned long)esp_get_free_heap_size());
+    lv_mem_monitor_t mon;
+    lv_mem_monitor(&mon);
+    ESP_LOGI("LVGL", "Used memory: %d bytes, Free: %d bytes", mon.total_size - mon.free_size, mon.free_size);
+
+    ESP_LOGI("MEMORY", "Total Heap Size: %d bytes", info.total_free_bytes + info.total_allocated_bytes);
+    ESP_LOGI("MEMORY", "Free Heap: %d bytes", info.total_free_bytes);
+    ESP_LOGI("MEMORY", "Min Ever Free Heap: %d bytes", info.minimum_free_bytes);
+    ESP_LOGI("MEMORY", "Allocated Heap: %d bytes", info.total_allocated_bytes);
+    ESP_LOGI(TAG, "xPortGetFreeHeapSize %d = DRAM", xPortGetFreeHeapSize());
+
+    int DRam = heap_caps_get_free_size(MALLOC_CAP_8BIT);
+    int IRam = heap_caps_get_free_size(MALLOC_CAP_32BIT) - heap_caps_get_free_size(MALLOC_CAP_8BIT);
+  
+    ESP_LOGI(TAG, "DRAM \t\t %d", DRam);
+    ESP_LOGI(TAG, "IRam \t\t %d", IRam);
+}
 static void on_pointer(lv_indev_t *indev, lv_indev_data_t *data)
 {
     touch_t touch;
@@ -113,7 +135,7 @@ void app_main(void)
     lv_init();
     lv_display_t *lv_display = lv_display_create(LCD_H_RES, LCD_V_RES);
 
-    uint32_t buf_size = LCD_H_RES * LCD_V_RES * 2 / 10;
+    uint32_t buf_size = LCD_H_RES * LCD_V_RES * 2 / 20; // Decreased this from / 10 - seams to be working ok
     lv_color_t *buf1 = heap_caps_malloc(buf_size, MALLOC_CAP_DMA);
     assert(buf1);
     lv_color_t *buf2 = heap_caps_malloc(buf_size, MALLOC_CAP_DMA);
@@ -154,10 +176,13 @@ void app_main(void)
     lv_obj_set_style_text_color(icon, lv_palette_main(LV_PALETTE_PINK), 0);
 
     lv_indev_set_cursor(pointer, icon);
-    // printf("Free heap: %lu bytes\n", (unsigned long)esp_get_free_heap_size());
+    
     
     // printf("Free heap: %lu bytes\n", (unsigned long)esp_get_free_heap_size());
     InitWifi();
+   
+
+    //print_heap_info();
     while (true)
     {
         vTaskDelay(pdMS_TO_TICKS(20));

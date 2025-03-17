@@ -824,6 +824,13 @@ C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/w
 C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/wifi_provisioning/CMakeFiles/install.dir
 C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/wifi_provisioning/CMakeFiles/install/local.dir
 C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/wifi_provisioning/CMakeFiles/install/strip.dir
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/esp-mqtt/CMakeFiles/__idf_esp-mqtt.dir
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/esp-mqtt/CMakeFiles/edit_cache.dir
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/esp-mqtt/CMakeFiles/rebuild_cache.dir
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/esp-mqtt/CMakeFiles/list_install_components.dir
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/esp-mqtt/CMakeFiles/install.dir
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/esp-mqtt/CMakeFiles/install/local.dir
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/esp-mqtt/CMakeFiles/install/strip.dir
 C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/atanisoft__esp_lcd_ili9488/CMakeFiles/__idf_atanisoft__esp_lcd_ili9488.dir
 C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/atanisoft__esp_lcd_ili9488/CMakeFiles/edit_cache.dir
 C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/atanisoft__esp_lcd_ili9488/CMakeFiles/rebuild_cache.dir

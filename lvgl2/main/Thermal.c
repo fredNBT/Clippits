@@ -31,6 +31,9 @@ void print_text(const char *text) {
     uart_write_bytes(UART_NUM, "\n", 1); 
 }
 
+void JogPrinter() {
+    uart_write_bytes(UART_NUM, "\n", 1);      // Send empty line to move the printer forward
+}
 void SendTestMessage()
 {
      printf("sending to thermal\n");

@@ -6,7 +6,10 @@
 void InitWifi(void);
 void wifi_scan(wifi_ap_record_t *ap_info, uint16_t *ap_count);
 esp_err_t  Wifi_Connect_STA(const char *ssid, const char *password);
-
-
+static void GetTime();
+void MQTTInit();
+void print_time();
+void register_time_callback(void (*callback)(const char *));
+int mqtt_send(char* topic, char* payload);
 
 #endif

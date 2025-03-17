@@ -549,6 +549,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/esp-mqtt/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/atanisoft__esp_lcd_ili9488/cmake_install.cmake")
 endif()
 

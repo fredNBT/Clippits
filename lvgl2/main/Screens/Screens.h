@@ -25,8 +25,11 @@ extern wigits_t wigits;
     void CreateJustPrint(void);
     void CreateWifiSettings(void);
     void CreateCalibration(void);
+    void CreateExportSettings();
     static void buildPWMsgBox(char *SSIDText);
     static void mboxCloseBtn_event_cb(lv_event_t * e);
+    void UpdateWifiSymbol(bool status);
+    void show_warning_box(void);
 #ifdef __cplusplus
 }
 #endif  

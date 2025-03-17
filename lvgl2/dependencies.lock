@@ -49,6 +49,6 @@ direct_dependencies:
 - atanisoft/esp_lcd_touch_xpt2046
 - idf
 - lvgl/lvgl
-manifest_hash: 248d1a6296d2bb0b83f22ce7f40606e8e637ff13e49937839154dc03b57b3c29
+manifest_hash: d808a413cd4d53b215e846b639fa92a9247b3801180193973a9f83f854c61369
 target: esp32
 version: 2.0.0
