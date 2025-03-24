@@ -1,5 +1,6 @@
 #include "lvgl.h"
 #include "Screens.h"
+#include "Styles.h"
 // #include "BasicImage.h"
 #include "Thermal.h"
 #include <stdio.h>
@@ -13,8 +14,10 @@
 #include <string.h>
 #include "nvs.h"
 #include "nvs_flash.h"
+#include "cJSON.h"
+#include <time.h>
+
 static const char *TAG = "Main";
-// #define LV_FONT_MONTSERRAT_32 1
 screens_t screens;
 static lv_obj_t *menu_panel;   // Sidebar menu
 static bool menu_open = false; // Menu state
@@ -22,10 +25,12 @@ lv_obj_t *MainContainer;
 lv_obj_t *text_input;
 lv_obj_t *mboxConnect;
 static lv_obj_t *keyboard;
-static lv_style_t style;
 lv_obj_t *Time_label;
 lv_anim_t BarAnimation;
-
+lv_obj_t *URL_text_input;
+lv_obj_t *UserName_text_input;
+lv_obj_t *Password_text_input;
+lv_obj_t *underline; // the Hambguer Menu Underline object 
 // top bar icons
 lv_obj_t *wifi_label;
 
@@ -84,12 +89,30 @@ static const lv_btnmatrix_ctrl_t custom_kb_ctrl_map_upper[] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 5, 1, 3};
 
+      
+    char* MakeJSON(const char* LabelText) {
+        cJSON *root = cJSON_CreateObject();  // Create a JSON object
+        if (root == NULL) {
+            return NULL;
+        }
+        static char USER[50];
+        ReadStringsFromNVS("User", USER, sizeof(USER));
+        cJSON_AddStringToObject(root, "LabelText", LabelText);
+        time_t now = 0;
+        cJSON_AddNumberToObject(root, "Time", time(&now));
+        cJSON_AddStringToObject(root, "User", USER);
+        char *json_string = cJSON_PrintUnformatted(root);  // Returns a dynamically allocated string
+        cJSON_Delete(root);
+        return json_string; 
+    }
+
 static void PrintLabel_event_cb(lv_event_t *e)
 {
-    printf("Printing Label\n");
     print_text(lv_textarea_get_text(text_input));                     // sends text to the thermal printer
-    mqtt_send("clippits/connect1", lv_textarea_get_text(text_input)); // sends text to the mqtt
-    lv_textarea_set_text(text_input, "");                             // Set an empty string
+    char* json_str = MakeJSON(lv_textarea_get_text(text_input));
+    mqtt_send("clippits/connect1", json_str); // sends text to the mqtt
+    free(json_str);
+    lv_textarea_set_text(text_input, "");                            
     lv_anim_start(&BarAnimation);
     xTaskCreate(MakeLabel, "MakeLabel", 2048, NULL, 5, NULL);
 }
@@ -142,7 +165,6 @@ void show_warning_box()
     lv_obj_t *mbox = lv_obj_create(lv_scr_act());
     lv_obj_set_size(mbox, 250, 200);
     lv_obj_center(mbox);
-    // lv_obj_set_style_bg_color(mbox, lv_palette_lighten(LV_PALETTE_RED, 3), 0);  // Light red background
     lv_obj_set_style_border_width(mbox, 2, 0);
 
     // Create a label for the warning message
@@ -266,7 +288,7 @@ static void Scan_event_cb(lv_event_t *e)
         // lv_label_set_text_fmt(WifiLabelStrength, "%d", ap_info[i].rssi);  LV_SYMBOL_WIFI
         lv_label_set_text(WifiLabelStrength, LV_SYMBOL_WIFI);
         lv_obj_align(WifiLabelStrength, LV_ALIGN_RIGHT_MID, 0, 0);
-        lv_obj_add_event_cb(SingleRecord, ConnectWifi_event_cb, LV_EVENT_PRESSED, NULL);
+        lv_obj_add_event_cb(SingleRecord, ConnectWifi_event_cb, LV_EVENT_CLICKED, NULL);
     }
 }
 
@@ -295,12 +317,20 @@ static void ChangeToSettings(lv_event_t *e)
     lv_obj_clean(MainContainer);
     CreateWifiSettings();
     lv_obj_add_flag(menu_panel, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_t *btn = lv_event_get_target(e);
+    lv_obj_t *label = lv_obj_get_child(btn, 0);
+    lv_obj_set_size(underline, lv_obj_get_width(label), 2); 
+    lv_obj_align_to(underline, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 4);
 }
 static void ChangeToJustPrint(lv_event_t *e)
 {
     lv_obj_clean(MainContainer);
     CreateJustPrint();
     lv_obj_add_flag(menu_panel, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_t *btn = lv_event_get_target(e);
+    lv_obj_t *label = lv_obj_get_child(btn, 0);
+    lv_obj_set_size(underline, lv_obj_get_width(label), 2); 
+    lv_obj_align_to(underline, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 4);
 }
 
 static void ChangeToCalibration(lv_event_t *e)
@@ -308,6 +338,10 @@ static void ChangeToCalibration(lv_event_t *e)
     lv_obj_clean(MainContainer);
     CreateCalibration();
     lv_obj_add_flag(menu_panel, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_t *btn = lv_event_get_target(e);
+    lv_obj_t *label = lv_obj_get_child(btn, 0);
+    lv_obj_set_size(underline, lv_obj_get_width(label), 2); 
+    lv_obj_align_to(underline, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 4);
 }
 
 static void ChangeToExportSettings(lv_event_t *e)
@@ -315,6 +349,10 @@ static void ChangeToExportSettings(lv_event_t *e)
     lv_obj_clean(MainContainer);
     CreateExportSettings();
     lv_obj_add_flag(menu_panel, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_t *btn = lv_event_get_target(e);
+    lv_obj_t *label = lv_obj_get_child(btn, 0);
+    lv_obj_set_size(underline, lv_obj_get_width(label), 2); 
+    lv_obj_align_to(underline, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 4);
 }
 
 void CreateScreens()
@@ -325,19 +363,17 @@ void CreateScreens()
 
 void HomeScreen()
 {
-    lv_style_init(&style);
-    lv_style_set_text_font(&style, &lv_font_montserrat_24);
-    lv_style_set_text_color(&style, lv_color_hex(0x303030));
-    lv_style_set_bg_color(&style, lv_color_hex(0xFFFFFF));
+    StylesInit();
 
     screens.home = lv_obj_create(NULL);
     MainContainer = lv_obj_create(screens.home);
     lv_obj_t *TopContainer = lv_obj_create(screens.home);
     lv_obj_set_style_pad_all(TopContainer, 0, 0);
     lv_obj_clear_flag(TopContainer, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_size(TopContainer, 320, 80);
+    lv_obj_set_size(TopContainer, 320, 70);
     lv_obj_set_pos(TopContainer, 0, 0);
     lv_obj_set_style_bg_color(TopContainer, lv_color_hex(0xFFFFFF), 0); // Set white background
+    lv_obj_set_style_border_width(TopContainer, 0, LV_PART_MAIN);
 
     lv_obj_t *Battery_label = lv_label_create(screens.home);
     lv_label_set_text(Battery_label, LV_SYMBOL_BATTERY_FULL);
@@ -373,18 +409,30 @@ void HomeScreen()
     menu_panel = lv_obj_create(screens.home);
     lv_obj_set_size(menu_panel, 200, 300);             // Width x Height
     lv_obj_align(menu_panel, LV_ALIGN_LEFT_MID, 0, 0); // Position at left
-    lv_obj_set_style_bg_color(menu_panel, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(menu_panel, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
     lv_obj_add_flag(menu_panel, LV_OBJ_FLAG_HIDDEN); // Start hidden
 
     // 📌 Add menu buttons
     lv_obj_t *btn1 = lv_btn_create(menu_panel);
+    lv_obj_add_style(btn1, &SideMenuButtons, 0);
     lv_obj_set_size(btn1, 150, 50);
     lv_obj_align(btn1, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_obj_t *label1 = lv_label_create(btn1);
-    lv_label_set_text(label1, "JustPrint");
+    lv_label_set_text(label1, "Just Print");
+
+
+    underline = lv_obj_create(menu_panel);
+    lv_obj_refr_size(label1);  // Force size recalculation as the label has just been drawn getting the size will retun 0 otheriwse
+
+    lv_obj_set_size(underline, lv_obj_get_width(label1), 2);  // Width, Height
+    lv_obj_set_style_border_width(underline,0,LV_PART_MAIN);
+    lv_obj_set_style_bg_color(underline, lv_palette_main(LV_PALETTE_RED), LV_PART_MAIN);
+    lv_obj_align_to(underline, label1, LV_ALIGN_OUT_BOTTOM_MID, 0, -2);
+
     lv_obj_add_event_cb(btn1, ChangeToJustPrint, LV_EVENT_PRESSED, NULL);
 
     lv_obj_t *btn2 = lv_btn_create(menu_panel);
+    lv_obj_add_style(btn2, &SideMenuButtons, 0);
     lv_obj_align_to(btn2, btn1, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
     lv_obj_set_size(btn2, 150, 50);
     lv_obj_set_pos(btn2, 0, 50);
@@ -393,6 +441,7 @@ void HomeScreen()
     lv_obj_add_event_cb(btn2, ChangeToSettings, LV_EVENT_PRESSED, NULL);
 
     lv_obj_t *Menubtn3 = lv_btn_create(menu_panel);
+    lv_obj_add_style(Menubtn3, &SideMenuButtons, 0);
     lv_obj_set_size(Menubtn3, 150, 50);
     lv_obj_align(Menubtn3, LV_ALIGN_TOP_LEFT, 0, 100);
     lv_obj_t *Menulabel3 = lv_label_create(Menubtn3);
@@ -400,6 +449,7 @@ void HomeScreen()
     lv_obj_add_event_cb(Menubtn3, ChangeToCalibration, LV_EVENT_PRESSED, NULL);
 
     lv_obj_t *Menubtn4 = lv_btn_create(menu_panel);
+    lv_obj_add_style(Menubtn4, &SideMenuButtons, 0);
     lv_obj_set_size(Menubtn4, 150, 50);
     lv_obj_align(Menubtn4, LV_ALIGN_TOP_LEFT, 0, 150);
     lv_obj_t *Menulabel4 = lv_label_create(Menubtn4);
@@ -422,7 +472,7 @@ void SplashScreen()
 {
     screens.splash = lv_obj_create(NULL);
     // lv_obj_t* img = lv_image_create(screens.splash);
-    // lv_img_set_src(img, &clippits);
+     //lv_img_set_src(img, &clippits);
 }
 // Function to switch screens dynamically
 void switch_screen(lv_obj_t *screen)
@@ -432,15 +482,20 @@ void switch_screen(lv_obj_t *screen)
 
 void CreateJustPrint()
 {
-
     lv_obj_t *kb = lv_keyboard_create(MainContainer);
     lv_keyboard_set_map(kb, LV_KEYBOARD_MODE_TEXT_LOWER, custom_kb_map, custom_kb_ctrl_map);
     lv_keyboard_set_map(kb, LV_KEYBOARD_MODE_TEXT_UPPER, custom_kb_map_upper, custom_kb_ctrl_map_upper);
+    lv_obj_set_size(kb, 320, 250);
 
     text_input = lv_textarea_create(MainContainer);
     lv_keyboard_set_textarea(kb, text_input);
-    lv_obj_set_pos(text_input, 0, 20); // Set position
+    lv_obj_set_pos(text_input, 0, 40); // Set position
     lv_obj_set_size(text_input, 320, 80);
+    lv_obj_set_style_border_width(text_input, 0, LV_PART_MAIN);
+    lv_obj_set_style_text_align(text_input, LV_TEXT_ALIGN_CENTER, 0);  // 0 = default part
+    lv_textarea_set_cursor_click_pos(text_input, true); // Optional: tap to move cursor
+    lv_obj_add_state(text_input, LV_STATE_FOCUSED);  // Fake the focus state to allow the cusor to always blink
+    lv_obj_add_style(text_input, &style, 0);
 
     wigits.ProgressBar = lv_bar_create(MainContainer);
     lv_obj_align(wigits.ProgressBar, LV_ALIGN_TOP_MID, 0, 120);
@@ -472,7 +527,6 @@ void CreateWifiSettings()
     lv_obj_t *ScanWifiButton = lv_btn_create(MainContainer); // Create button
     lv_obj_set_pos(ScanWifiButton, 220, 10);                 // Set position
     lv_obj_set_size(ScanWifiButton, 70, 70);                 // Set size
-
     lv_obj_add_event_cb(ScanWifiButton, Scan_event_cb, LV_EVENT_PRESSED, NULL); // Attach event
 
     lv_obj_t *ScanWifiButtonLabel = lv_label_create(ScanWifiButton);
@@ -480,13 +534,17 @@ void CreateWifiSettings()
     lv_obj_center(ScanWifiButtonLabel); // Center the label
 }
 
-esp_err_t save_string_to_nvs(const char *key, const char *value) {
+static esp_err_t save_string_to_nvs(const char *key, const char *value)
+{
+    ESP_LOGI("Save String", "URL: %s", value);
     nvs_handle_t my_handle;
     esp_err_t err = nvs_open("storage", NVS_READWRITE, &my_handle);
-    if (err != ESP_OK) return err;
+    if (err != ESP_OK)
+        return err;
 
     err = nvs_set_str(my_handle, key, value);
-    if (err == ESP_OK) {
+    if (err == ESP_OK)
+    {
         err = nvs_commit(my_handle);
     }
 
@@ -494,17 +552,22 @@ esp_err_t save_string_to_nvs(const char *key, const char *value) {
     return err;
 }
 
-esp_err_t read_string_from_nvs(const char *key, char *out_value, size_t max_size) {
+esp_err_t read_string_from_nvs(const char *key, char *out_value, size_t max_size)
+{
     nvs_handle_t my_handle;
     esp_err_t err = nvs_open("storage", NVS_READONLY, &my_handle);
-    if (err != ESP_OK) return err;
+
+    if (err != ESP_OK){
+        ESP_LOGI("error", "failed to reteive");
+        return err;
+    }
 
     size_t required_size;
     err = nvs_get_str(my_handle, key, NULL, &required_size);
-    if (err == ESP_OK && required_size <= max_size) {
+    if (err == ESP_OK && required_size <= max_size)
+    {
         err = nvs_get_str(my_handle, key, out_value, &required_size);
     }
-
     nvs_close(my_handle);
     return err;
 }
@@ -527,18 +590,31 @@ static void MQTT_input_event_cb(lv_event_t *e)
         lv_keyboard_set_textarea(keyboard, NULL);
         lv_obj_add_flag(keyboard, LV_OBJ_FLAG_HIDDEN);
         ESP_LOGI("", "defocused");
-        save_string_to_nvs("URL", "mqtt://test.mosquitto.org:1883");
+        const char *URLEnteredtext = lv_textarea_get_text(URL_text_input); // Get the current text
+        const char *UserNameText = lv_textarea_get_text(UserName_text_input); 
+        const char *PassText = lv_textarea_get_text(Password_text_input); 
+        esp_err_t errrr = save_string_to_nvs("URL", URLEnteredtext);
+        esp_err_t err = save_string_to_nvs("User", UserNameText);
+        esp_err_t errb = save_string_to_nvs("Pass", PassText);
+
+        if (err == ESP_OK)
+        {
+            ESP_LOGI(TAG, "String saved successfully!");
+        }
+        else
+        {
+            ESP_LOGE(TAG, "Failed to save string: %s", esp_err_to_name(err));
+        }
     }
 }
 
 void CreateExportSettings()
 {
-
     lv_obj_t *URLLabel = lv_label_create(MainContainer);
     lv_label_set_text(URLLabel, "URL");
     lv_obj_set_pos(URLLabel, 10, 40);
 
-    lv_obj_t *URL_text_input = lv_textarea_create(MainContainer);
+    URL_text_input = lv_textarea_create(MainContainer);
     lv_obj_set_size(URL_text_input, 250, 40);
     lv_obj_set_pos(URL_text_input, 50, 30);
     lv_textarea_set_placeholder_text(URL_text_input, "mqqt://myServer.com");
@@ -548,7 +624,7 @@ void CreateExportSettings()
     lv_label_set_text(UserNameLabel, "User Name");
     lv_obj_set_pos(UserNameLabel, 10, 90);
 
-    lv_obj_t *UserName_text_input = lv_textarea_create(MainContainer);
+    UserName_text_input = lv_textarea_create(MainContainer);
     lv_obj_set_size(UserName_text_input, 200, 40);
     lv_obj_set_pos(UserName_text_input, 100, 80);
     lv_textarea_set_placeholder_text(UserName_text_input, "Username");
@@ -558,18 +634,21 @@ void CreateExportSettings()
     lv_label_set_text(PasswordLabel, "Password");
     lv_obj_set_pos(PasswordLabel, 10, 140);
 
-    lv_obj_t *Password_text_input = lv_textarea_create(MainContainer);
+    Password_text_input = lv_textarea_create(MainContainer);
     lv_obj_set_size(Password_text_input, 200, 40);
     lv_obj_set_pos(Password_text_input, 100, 130);
     lv_textarea_set_placeholder_text(Password_text_input, "Password");
     lv_obj_add_event_cb(Password_text_input, MQTT_input_event_cb, LV_EVENT_ALL, keyboard);
 
     char URL[50];
-    if (read_string_from_nvs("URL", URL, sizeof(URL)) == ESP_OK) {
-        ESP_LOGI("NVS", "Stored URL: %s", URL);
-        lv_textarea_set_text(URL_text_input,URL);
-    } else {
-        ESP_LOGE("NVS", "Failed to read URL");
+    if (read_string_from_nvs("URL", URL, sizeof(URL)) == ESP_OK)
+    {
+        lv_textarea_set_text(URL_text_input, URL);
+    }
+    char USER[50];
+    if (read_string_from_nvs("User", USER, sizeof(USER)) == ESP_OK)
+    {
+        lv_textarea_set_text(UserName_text_input, USER);
     }
 }
 

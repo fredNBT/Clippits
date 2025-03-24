@@ -11,5 +11,6 @@ void MQTTInit();
 void print_time();
 void register_time_callback(void (*callback)(const char *));
 int mqtt_send(char* topic, char* payload);
+esp_err_t ReadStringsFromNVS(const char *key, char *out_value, size_t max_size);
 
 #endif

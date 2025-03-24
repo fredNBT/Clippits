@@ -2,6 +2,7 @@
 #include "WiFi.h"
 #include "esp_wifi.h"
 #include "esp_log.h"
+#include "nvs.h"
 #include "nvs_flash.h"
 #include "esp_event.h"
 #include <string.h>
@@ -18,7 +19,7 @@ SemaphoreHandle_t got_time_semaphore;
 static const char *TAG = "WiFi";
 static EventGroupHandle_t wifi_events;
 static int CONNECTED = BIT0;
-static int DISCONNECTED = BIT1;
+//static int DISCONNECTED = BIT1;
 static esp_mqtt_client_handle_t client;
 static void (*ui_update_callback)(const char *) = NULL; // Function pointer for UI callback
 
@@ -96,7 +97,6 @@ esp_err_t Wifi_Connect_STA(const char *ssid, const char *password)
     wifi_config_t wifi_config = {};
     strncpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
     strncpy((char *)wifi_config.sta.password, password, sizeof(wifi_config.sta.password) - 1);
-
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     xEventGroupClearBits(wifi_events, CONNECTED);
     esp_wifi_connect();
@@ -111,7 +111,6 @@ esp_err_t Wifi_Connect_STA(const char *ssid, const char *password)
         return ESP_FAIL;
     }
 }
-// UTC+5
 
 void on_got_time(struct timeval *tv)
 {
@@ -123,10 +122,9 @@ void print_time()
     time_t now = 0;
     time(&now);
     struct tm *time_info = localtime(&now);
-
     char time_buffer[50];
     strftime(time_buffer, sizeof(time_buffer), "%H:%M", time_info);
-    ESP_LOGI(TAG, "************ %s ***********", time_buffer);
+    //ESP_LOGI(TAG, "************ %s ***********", time_buffer);
 
     if (ui_update_callback)
     {
@@ -142,8 +140,6 @@ void GetTime()
     tzset();
     time_t now = 0;
     time(&now);
-    struct tm *time_info = localtime(&now);
-
     esp_sntp_init();
     esp_sntp_set_sync_mode(SNTP_SYNC_MODE_IMMED);
     esp_sntp_setservername(0, "pool.ntp.org");
@@ -152,8 +148,6 @@ void GetTime()
     xSemaphoreTake(got_time_semaphore, portMAX_DELAY);
     print_time();
 }
-
-
 
 void mqtt_event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
@@ -182,11 +176,43 @@ void mqtt_event_handler(void *event_handler_arg, esp_event_base_t event_base, in
     break;
     }
 }
+
+ esp_err_t ReadStringsFromNVS(const char *key, char *out_value, size_t max_size)
+{
+    nvs_handle_t my_handle;
+    esp_err_t err = nvs_open("storage", NVS_READONLY, &my_handle);
+
+    if (err != ESP_OK){
+        ESP_LOGI("error", "failed to reteive");
+        return err;
+    }
+
+    size_t required_size;
+    err = nvs_get_str(my_handle, key, NULL, &required_size);
+    if (err == ESP_OK && required_size <= max_size)
+    {
+        err = nvs_get_str(my_handle, key, out_value, &required_size);
+    }
+    nvs_close(my_handle);
+    return ESP_OK;
+}
+
 void MQTTInit()
 {
+    
+    static char URL[50];
+    ReadStringsFromNVS("URL", URL, sizeof(URL));
+    static char USER[50];
+    ReadStringsFromNVS("User", USER, sizeof(USER));
+    static char PASS[50];
+    ReadStringsFromNVS("Pass", PASS, sizeof(PASS));
+
     ESP_LOGI(TAG, "MQTT INIT");
     esp_mqtt_client_config_t esp_client_config = {
-        .broker.address.uri = "mqtt://test.mosquitto.org:1883"};
+        .broker.address.uri = URL,
+        .credentials.authentication.password =PASS,
+        .credentials.username = USER
+    };
     client = esp_mqtt_client_init(&esp_client_config);
     esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);
     esp_mqtt_client_start(client);
@@ -196,3 +222,4 @@ int mqtt_send(char* topic, char* payload)
 {
    return esp_mqtt_client_publish(client,topic,payload,strlen(payload),1,0);
 }
+

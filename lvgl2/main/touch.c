@@ -13,7 +13,7 @@ void touch_display_init() {
         .cs_gpio_num = TOUCH_CS,
         .dc_gpio_num = -1,
         .spi_mode = 0,
-        .pclk_hz = 500 * 1000,  // Lower speed for stability
+        .pclk_hz = 1000 * 1000,  // Lower speed for stability
         .trans_queue_depth = 10,
         .on_color_trans_done = NULL,
         .user_ctx = NULL,
