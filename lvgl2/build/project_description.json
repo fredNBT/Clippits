@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "lvgl2",
-    "project_version":    "d20c6369-dirty",
+    "project_version":    "c9cea630-dirty",
     "project_path":       "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2",
     "idf_path":           "C:/Users/fred/esp/v5.4/esp-idf",
     "build_dir":          "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build",
@@ -1270,7 +1270,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [ "atanisoft__esp_lcd_ili9488", "atanisoft__esp_lcd_touch_xpt2046", "lvgl__lvgl" ],
             "file": "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/main.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/Screens.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/WiFi.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/StepperMotor", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Thermal.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/touch.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/Styles.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/SplashScreen.c" ],
+            "sources": [ "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/main.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/Screens.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/WiFi.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/StepperMotor", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Thermal.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/touch.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/Styles.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/SplashScreen.c", "C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/ImportData.c" ],
             "include_dirs": [ ".", "Screens" ]
         },
         "mbedtls": {

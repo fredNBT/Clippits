@@ -3,8 +3,9 @@
 #include "Styles.h"
 lv_style_t style;
 lv_style_t SideMenuButtons;
-
-
+lv_style_t UnderlineStyle;
+lv_style_t TopIconStyle;
+lv_style_t GreenButtonsStyle;
 
 static void InitSideMenuButton(){
     lv_style_init(&SideMenuButtons);
@@ -15,18 +16,23 @@ static void InitSideMenuButton(){
     lv_style_set_border_width(&SideMenuButtons,0);
     lv_style_set_shadow_width(&SideMenuButtons,0);
 }
+static void InitTopIcons(){
+    lv_style_init(&TopIconStyle);
+    lv_style_set_text_font(&TopIconStyle, &lv_font_montserrat_14);
+    lv_style_set_text_color(&TopIconStyle, lv_color_hex(0x303030));
+}
+
+static void InitGreenButtons(){
+
+    lv_style_set_size(&GreenButtonsStyle, 125, 50);
+    lv_style_set_radius(&GreenButtonsStyle,0);
+    lv_style_set_bg_color(&GreenButtonsStyle, lv_palette_main(LV_PALETTE_GREEN));
+}
 
 static void MakeUnderline(){
-    // lv_obj_set_size(underline, 100, 2);  // Width, Height
-    // lv_obj_set_style_border_width(underline,0,LV_PART_MAIN);
-    // lv_obj_set_style_bg_color(underline, lv_palette_main(LV_PALETTE_RED), LV_PART_MAIN);
-    // lv_obj_set_size(underline, 320, 2);
-    // lv_obj_set_pos(underline,100,100);
-    // lv_obj_set_style_bg_color(underline, lv_palette_main(LV_PALETTE_RED), 0);
-    // lv_obj_set_height(underline,200);
-    // lv_obj_set_style_bg_opa(underline, LV_OPA_COVER, 0);
-    // lv_obj_clear_flag(underline, LV_OBJ_FLAG_SCROLLABLE);
-    //lv_obj_align_to(underline, label, LV_ALIGN_OUT_BOTTOM_MID, 0, -2);
+    lv_style_init(&UnderlineStyle);
+    lv_style_set_bg_color(&UnderlineStyle, lv_palette_main(LV_PALETTE_GREEN));
+    lv_style_set_border_width(&UnderlineStyle,0);
 }
 
 void StylesInit(){
@@ -34,6 +40,9 @@ void StylesInit(){
     lv_style_set_text_font(&style, &lv_font_montserrat_24);
     lv_style_set_text_color(&style, lv_color_hex(0x303030));
     lv_style_set_bg_color(&style, lv_color_hex(0xFFFFFF));
+
     InitSideMenuButton();
     MakeUnderline();
+    InitTopIcons();
+    InitGreenButtons();
 }

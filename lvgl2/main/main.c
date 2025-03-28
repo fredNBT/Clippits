@@ -157,6 +157,7 @@ void app_main(void)
     //screentext = xQueueCreate(10,sizeof(screentext_t));
     setup_stepper();
     CreateScreens();
+
     switch_screen(screens.splash); 
     lv_timer_handler();
     vTaskDelay(pdMS_TO_TICKS(2000));

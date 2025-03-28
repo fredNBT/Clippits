@@ -16,6 +16,7 @@ typedef struct {
     lv_obj_t* ProgressBar;
 } wigits_t;
 extern wigits_t wigits;
+extern lv_obj_t *MainContainer;
 
     void CreateScreens(void);
     void switch_screen(lv_obj_t *screen);  // Function prototype
