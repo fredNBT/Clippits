@@ -23,7 +23,6 @@ static void InitTopIcons(){
 }
 
 static void InitGreenButtons(){
-
     lv_style_set_size(&GreenButtonsStyle, 125, 50);
     lv_style_set_radius(&GreenButtonsStyle,0);
     lv_style_set_bg_color(&GreenButtonsStyle, lv_palette_main(LV_PALETTE_GREEN));

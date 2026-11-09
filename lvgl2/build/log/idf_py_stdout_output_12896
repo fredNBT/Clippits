@@ -1,0 +1,110 @@
+[1/9] Performing build step for 'bootloader'
+[1/1] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\build\bootloader\esp-idf\esptool_py && C:\Espressif\python_env\idf5.4_py3.11_env\Scripts\python.exe C:/Espressif/frameworks/esp-idf-v5.4/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x1000 C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/bootloader/bootloader.bin"
+Bootloader binary size 0x6560 bytes. 0xaa0 bytes (9%) free.
+[2/9] No install step for 'bootloader'
+[3/9] Completed 'bootloader'
+[4/9] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+In file included from C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/main.c:20:
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/Screens.h:30:17: warning: 'buildPWMsgBox' declared 'static' but never defined [-Wunused-function]
+   30 |     static void buildPWMsgBox(char *SSIDText);
+      |                 ^~~~~~~~~~~~~
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/Screens/Screens.h:31:17: warning: 'mboxCloseBtn_event_cb' declared 'static' but never defined [-Wunused-function]
+   31 |     static void mboxCloseBtn_event_cb(lv_event_t * e);
+      |                 ^~~~~~~~~~~~~~~~~~~~~
+In file included from C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/main.c:25:
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/WiFi.h:9:13: warning: 'GetTime' declared 'static' but never defined [-Wunused-function]
+    9 | static void GetTime();
+      |             ^~~~~~~
+In file included from C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/main.c:24:
+C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/main/touch.h:14:31: warning: 'tp' defined but not used [-Wunused-variable]
+   14 | static esp_lcd_touch_handle_t tp;
+      |                               ^~
+[5/9] Linking C static library esp-idf\main\libmain.a
+[6/9] Generating ld/sections.ld
+info: INFO: Symbol MQTT_PROTOCOL_311 defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:3
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:3
+info: INFO: Symbol MQTT_PROTOCOL_5 defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:9
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:9
+info: INFO: Symbol MQTT_TRANSPORT_SSL defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:15
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:15
+info: INFO: Symbol MQTT_TRANSPORT_WEBSOCKET defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:21
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:21
+info: INFO: Symbol MQTT_TRANSPORT_WEBSOCKET_SECURE defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:28
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:28
+info: INFO: Symbol MQTT_MSG_ID_INCREMENTAL defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:36
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:36
+info: INFO: Symbol MQTT_SKIP_PUBLISH_IF_DISCONNECTED defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:43
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:43
+info: INFO: Symbol MQTT_REPORT_DELETED_MESSAGES defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:53
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:53
+info: INFO: Symbol MQTT_USE_CUSTOM_CONFIG defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:60
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:60
+info: INFO: Symbol MQTT_TCP_DEFAULT_PORT defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:66
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:66
+info: INFO: Symbol MQTT_SSL_DEFAULT_PORT defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:73
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:73
+info: INFO: Symbol MQTT_WS_DEFAULT_PORT defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:81
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:81
+info: INFO: Symbol MQTT_WSS_DEFAULT_PORT defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:89
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:89
+info: INFO: Symbol MQTT_BUFFER_SIZE defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:98
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:98
+info: INFO: Symbol MQTT_TASK_STACK_SIZE defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:105
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:105
+info: INFO: Symbol MQTT_DISABLE_API_LOCKS defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:112
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:112
+info: INFO: Symbol MQTT_TASK_PRIORITY defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:120
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:120
+info: INFO: Symbol MQTT_POLL_READ_TIMEOUT_MS defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:127
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:127
+info: INFO: Symbol MQTT_EVENT_QUEUE_SIZE defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:134
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:134
+info: INFO: Symbol MQTT_TASK_CORE_SELECTION_ENABLED defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:141
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:141
+info: INFO: Symbol MQTT_USE_CORE_0 defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:149
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:149
+info: INFO: Symbol MQTT_USE_CORE_1 defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:151
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:151
+info: INFO: Symbol MQTT_OUTBOX_DATA_ON_EXTERNAL_MEMORY defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:155
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:155
+info: INFO: Symbol MQTT_CUSTOM_OUTBOX defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:162
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:162
+info: INFO: Symbol MQTT_OUTBOX_EXPIRED_TIMEOUT_MS defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:173
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:173
+info: INFO: Choice MQTT_TASK_CORE_SELECTION defined in multiple locations (see below). Please check if this is a correct behavior or a random name match:
+    C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\components\esp-mqtt\Kconfig:146
+    C:\Espressif\frameworks\esp-idf-v5.4\components\mqtt\esp-mqtt\Kconfig:146
+[7/9] Linking CXX executable lvgl2.elf
+[8/9] Generating binary image from built executable
+esptool.py v4.12.0
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Generated C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/lvgl2.bin
+[9/9] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\fred\Desktop\Clippits\Clippits-main\Clippits-main\lvgl2\build\esp-idf\esptool_py && C:\Espressif\python_env\idf5.4_py3.11_env\Scripts\python.exe C:/Espressif/frameworks/esp-idf-v5.4/components/partition_table/check_sizes.py --offset 0x8000 partition --type app C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/partition_table/partition-table.bin C:/Users/fred/Desktop/Clippits/Clippits-main/Clippits-main/lvgl2/build/lvgl2.bin"
+lvgl2.bin binary size 0x14e2a0 bytes. Smallest app partition is 0x177000 bytes. 0x28d60 bytes (11%) free.

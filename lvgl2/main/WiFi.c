@@ -11,7 +11,7 @@
 #include <time.h>
 #include "esp_sntp.h"
 #include "mqtt_client.h"
-
+#include "LVGLPortLock.h"
 const char *ntpServer = "pool.ntp.org";
 SemaphoreHandle_t got_time_semaphore;
 
@@ -64,7 +64,9 @@ void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base,
         break;
     case IP_EVENT_STA_GOT_IP:
         ESP_LOGI(TAG, "IP_EVENT_STA_GOT_IP");
+        lvgl_port_lock();
         UpdateWifiSymbol(true); // calls the UpdateWifisymbol in the screens file - this needs to be changed to a call back
+        lvgl_port_unlock();
         xEventGroupSetBits(wifi_events, CONNECTED);
         GetTime();
         MQTTInit();

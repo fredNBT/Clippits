@@ -2,6 +2,7 @@
 #include "Screens.h"
 #include "Styles.h"
 #include "ImportData.h"
+#include "RFID.h"
 #include "Thermal.h"
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
@@ -16,6 +17,7 @@
 #include "nvs_flash.h"
 #include "cJSON.h"
 #include <time.h>
+#include "LVGLPortLock.h"
 
 
 static const char *TAG = "Main";
@@ -43,7 +45,9 @@ typedef struct
 } Wifi_credentials_t;
 void update_ui_time(const char *time_str)
 {
+    lvgl_port_lock();
     lv_label_set_text(Time_label, time_str); // Update LVGL label
+    lvgl_port_unlock();
 }
 static void time_timer_cb(lv_timer_t *timer)
 {
@@ -110,13 +114,46 @@ static const lv_btnmatrix_ctrl_t custom_kb_ctrl_map_upper[] = {
 
 static void PrintLabel_event_cb(lv_event_t *e)
 {
-    print_text(lv_textarea_get_text(text_input));                     // sends text to the thermal printer
-    char* json_str = MakeJSON(lv_textarea_get_text(text_input));
-    mqtt_send("clippits/connect1", json_str); // sends text to the mqtt
-    free(json_str);
-    lv_textarea_set_text(text_input, "");                            
-    lv_anim_start(&BarAnimation);
-    xTaskCreate(MakeLabel, "MakeLabel", 2048, NULL, 5, NULL);
+    // printf("print label event");
+    // //MakeLabel();
+    // print_text(lv_textarea_get_text(text_input));                     // sends text to the thermal printer
+    // char* json_str = MakeJSON(lv_textarea_get_text(text_input));
+    // //mqtt_send("clippits/connect1", json_str); // sends text to the mqtt
+    // free(json_str);
+    // lv_textarea_set_text(text_input, "");                            
+    // lv_anim_start(&BarAnimation);
+    // xTaskCreate(MakeLabel, "MakeLabel", 2048, NULL, 5, NULL);
+
+ for (size_t i = 0; i < 8; i++)
+    {
+        print_text(lv_textarea_get_text(text_input));
+       // lv_delay_ms(500);
+    }
+     lv_delay_ms(2000);
+     //close Barrel
+    
+    NudgeClose(0,5000);
+    //lv_delay_ms(5000);
+    
+
+    NudgeBarrel(0,210);
+    for (size_t i = 0; i < 10; i++)
+    {
+    NudgeBarrel(1,170);
+    print_text(lv_textarea_get_text(text_input));
+    print_text("");
+    lv_delay_ms(500);
+    }
+    NudgeBarrel(1,20450);
+
+    //open barrel
+    for (size_t i = 0; i < 5; i++)
+    {
+        NudgeClose(1,250);
+       // lv_delay_ms(500);
+    }
+     lv_textarea_set_text(text_input, "");  
+
 }
 
 static void ConnectWifi_event_cb(lv_event_t *e)
@@ -301,29 +338,68 @@ static void Nudge(lv_event_t *e)
     if (nudge_value && *nudge_value)
     {
         printf("Nudge Down\n");
-        NudgeBarrel(1);
+        NudgeBarrel(1,250);
     }
     else
     {
         printf("Nudge Up\n");
-        NudgeBarrel(0);
+        NudgeBarrel(0,250);
     }
 }
+static void NudgeCloseButton(lv_event_t *e)
+{
+    NudgeClose(0,250);
+}
+static void NudgeOpenButton(lv_event_t *e)
+{
+    NudgeClose(1,250);
+}
+static void TestPrint(lv_event_t *e){
+
+    for (size_t i = 0; i < 8; i++)
+    {
+        SendTestMessage();
+       // lv_delay_ms(500);
+    }
+     lv_delay_ms(2000);
+     //close Barrel
+    
+    NudgeClose(0,5000);
+    //lv_delay_ms(5000);
+    
+
+    NudgeBarrel(0,210);
+    for (size_t i = 0; i < 10; i++)
+    {
+    NudgeBarrel(1,170);
+    SendTestMessage();
+    lv_delay_ms(500);
+    }
+    NudgeBarrel(1,20450);
+
+    //open barrel
+    for (size_t i = 0; i < 5; i++)
+    {
+        NudgeClose(1,250);
+       // lv_delay_ms(500);
+    }
+}
+
 static void MovePaper(lv_event_t *e)
 {
     JogPrinter();
 }
 
 static void ChangeDifferentScreen(lv_event_t *e){
-    lv_obj_clean(MainContainer);
+    lv_obj_clean(MainContainer);  //Delete Everything in the current containor
     lv_obj_add_flag(menu_panel, LV_OBJ_FLAG_HIDDEN);
     lv_obj_t *btn = lv_event_get_target(e);
     lv_obj_t *label = lv_obj_get_child(btn, 0);
     lv_obj_set_size(underline, lv_obj_get_width(label), 2); 
     lv_obj_align_to(underline, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 4);
 
+    // switch the screen based on the Text inside the menu label
     const char *text = lv_label_get_text(label);
-
     if (strcmp(text, "Just Print") == 0) {
         CreateJustPrint();
     } else if (strcmp(text, "Wifi Settings") == 0) {
@@ -334,7 +410,8 @@ static void ChangeDifferentScreen(lv_event_t *e){
         CreateExportSettings();
     } else if (strcmp(text, "Import Data") == 0) {
         CreateImportData();
-        
+    } else if (strcmp(text, "Read RFID") == 0) {
+        CreateRFIDScreen();
     }
 }
 
@@ -478,6 +555,8 @@ void HomeScreen()
 void SplashScreen()
 {
     screens.splash = lv_obj_create(NULL);
+    lv_obj_t *SplashLabel = lv_label_create(screens.splash);
+    lv_label_set_text(SplashLabel, "Kabel sind cool!");
     // lv_obj_t* img = lv_image_create(screens.splash);
      //lv_img_set_src(img, &clippits);
 }
@@ -765,11 +844,9 @@ void CreateCalibration()
 
     lv_obj_t *MoveBarrellabel = lv_label_create(MainContainer);
     lv_label_set_text(MoveBarrellabel, "Jog Barrel");
-    lv_obj_set_pos(MoveBarrellabel, 170, 150);
+    lv_obj_set_pos(MoveBarrellabel, 210, 90);
 
-    lv_obj_t *MovePaperlabel = lv_label_create(MainContainer);
-    lv_label_set_text(MovePaperlabel, "Jog paper");
-    lv_obj_set_pos(MovePaperlabel, 170, 280);
+
 
     lv_obj_t *NudgeButton = lv_btn_create(MainContainer); // Create button
     lv_obj_set_pos(NudgeButton, 20, 70);                  // Set position
@@ -782,7 +859,7 @@ void CreateCalibration()
     lv_obj_center(Nudgelabel); // Center the label
 
     lv_obj_t *NudgeButtonDown = lv_btn_create(MainContainer);                   // Create button
-    lv_obj_set_pos(NudgeButtonDown, 20, 160);                                   // Set position
+    lv_obj_set_pos(NudgeButtonDown, 120, 70);                                   // Set position
     lv_obj_set_size(NudgeButtonDown, 70, 70);                                   // Set size
     static bool nudge_down = false;                                             // Define the boolean variable
     lv_obj_add_event_cb(NudgeButtonDown, Nudge, LV_EVENT_CLICKED, &nudge_down); // Attach event
@@ -791,11 +868,56 @@ void CreateCalibration()
     lv_label_set_text(NudgeDownlabel, LV_SYMBOL_DOWN);
     lv_obj_center(NudgeDownlabel); // Center the label
 
+    // Move paper
+
+    lv_obj_t *MovePaperlabel = lv_label_create(MainContainer);
+    lv_label_set_text(MovePaperlabel, "Jog paper");
+    lv_obj_set_pos(MovePaperlabel, 210, 180);
+
     lv_obj_t *NudgePaperButton = lv_btn_create(MainContainer); // Create button
-    lv_obj_set_pos(NudgePaperButton, 20, 280);                 // Set position
+    lv_obj_set_pos(NudgePaperButton, 20, 180);                 // Set position
     lv_obj_set_size(NudgePaperButton, 70, 70);                 // Set size
     lv_obj_add_event_cb(NudgePaperButton, MovePaper, LV_EVENT_PRESSED, NULL);
     lv_obj_t *NudgePaperlabel = lv_label_create(NudgePaperButton);
     lv_label_set_text(NudgePaperlabel, LV_SYMBOL_UP);
     lv_obj_center(NudgePaperlabel); // Center the label
+
+    // close buttons
+    lv_obj_t *CloseOpenlabel = lv_label_create(MainContainer);
+    lv_label_set_text(CloseOpenlabel, "Close/Open");
+    lv_obj_set_pos(CloseOpenlabel, 210, 280);
+
+    lv_obj_t *CloseButtonDown = lv_btn_create(MainContainer);                   // Create button
+    lv_obj_set_pos(CloseButtonDown, 20, 260);                                   // Set position
+    lv_obj_set_size(CloseButtonDown, 70, 70);                                   // Set size
+    static bool Close_down = false;                                             // Define the boolean variable
+    lv_obj_add_event_cb(CloseButtonDown, NudgeCloseButton, LV_EVENT_CLICKED, &Close_down); // Attach event
+
+    lv_obj_t *CloseDownlabel = lv_label_create(CloseButtonDown);
+    lv_label_set_text(CloseDownlabel, LV_SYMBOL_DOWN);
+    lv_obj_center(CloseDownlabel); // Center the label
+
+    //Open Button
+    lv_obj_t *OpenButtonDown = lv_btn_create(MainContainer);                   // Create button
+    lv_obj_set_pos(OpenButtonDown, 120, 260);                                   // Set position
+    lv_obj_set_size(OpenButtonDown, 70, 70);                                   // Set size
+    static bool Open_down = false;                                             // Define the boolean variable
+    lv_obj_add_event_cb(OpenButtonDown, NudgeOpenButton, LV_EVENT_CLICKED, &Open_down); // Attach event
+
+    lv_obj_t *OpenDownlabel = lv_label_create(OpenButtonDown);
+    lv_label_set_text(OpenDownlabel, LV_SYMBOL_UP);
+    lv_obj_center(OpenDownlabel); // Center the label
+
+
+        // Test Print Button
+    lv_obj_t *TestPrintButton = lv_btn_create(MainContainer);                   // Create button
+    lv_obj_set_pos(TestPrintButton, 80, 360);                                   // Set position
+    lv_obj_set_size(TestPrintButton, 70, 70);                                   // Set size
+    static bool Test_down = false;                                             // Define the boolean variable
+    lv_obj_add_event_cb(TestPrintButton, TestPrint, LV_EVENT_CLICKED, &Test_down); // Attach event
+
+        lv_obj_t *TestPrintlabel = lv_label_create(TestPrintButton);
+    lv_label_set_text(TestPrintlabel, "Test Print");
+    lv_obj_center(TestPrintlabel); // Center the label
+
 }

@@ -24,6 +24,7 @@
 #include "touch.h"
 #include "WiFi.h"
 #include "esp_heap_caps.h"
+#include "LVGLPortLock.h"
 
 
 #define UART_NUM UART_NUM_0  // Use UART0 (USB Serial Monitor)
@@ -154,7 +155,6 @@ void app_main(void)
     esp_timer_create(&lvgl_tick_timer_args, &lvgl_tick_timer);
     esp_timer_start_periodic(lvgl_tick_timer, LVGL_TICK_PERIOD_MS * 1000);
     
-    //screentext = xQueueCreate(10,sizeof(screentext_t));
     setup_stepper();
     CreateScreens();
 
@@ -162,7 +162,7 @@ void app_main(void)
     lv_timer_handler();
     vTaskDelay(pdMS_TO_TICKS(2000));
     switch_screen(screens.home);
-
+    lvgl_port_init_locking(); //Set up the mutex for lvgl spi bus
     uart_init();
     touch_display_init();
     touch_t touch;
@@ -178,12 +178,26 @@ void app_main(void)
 
     lv_indev_set_cursor(pointer, icon);
     
-    
-    // printf("Free heap: %lu bytes\n", (unsigned long)esp_get_free_heap_size());
-    InitWifi();
    
+    // printf("Free heap: %lu bytes\n", (unsigned long)esp_get_free_heap_size());
+     InitWifi();
 
-    //print_heap_info();
+    gpio_reset_pin(Main_WrapMotor_En);
+    gpio_set_direction(Main_WrapMotor_En, GPIO_MODE_OUTPUT);
+    gpio_set_level(Main_WrapMotor_En, 0);   // set low  enable all motors 
+    
+    gpio_reset_pin(CloseStepper_DIR);
+    gpio_set_direction(CloseStepper_DIR, GPIO_MODE_OUTPUT);
+    gpio_set_level(CloseStepper_DIR, 1);
+
+    // gpio_reset_pin(CloseSensor);
+    // gpio_set_direction(CloseSensor, GPIO_MODE_INPUT);
+
+
+
+
+
+
     while (true)
     {
         vTaskDelay(pdMS_TO_TICKS(20));

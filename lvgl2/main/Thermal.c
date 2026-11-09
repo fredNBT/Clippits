@@ -6,6 +6,8 @@
 #define TXD_PIN 25           
  #define RXD_PIN 27  
 #define BUF_SIZE 1024
+#define LINE_WIDTH   36   // total characters per line
+#define LEFT_MARGIN  10   // always-empty padding at the start
 
 void uart_init()
 {
@@ -21,16 +23,26 @@ void uart_init()
     uart_param_config(UART_NUM, &uart_config);
     uart_set_pin(UART_NUM, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 }
-void print_text(const char *text) {
-    uart_write_bytes(UART_NUM, text, strlen(text));  // Send text
-    uart_write_bytes(UART_NUM, "\n", 1);             // Send newline (LF)
-    uart_write_bytes(UART_NUM, "\n", 1); 
-    uart_write_bytes(UART_NUM, text, strlen(text)); 
-    uart_write_bytes(UART_NUM, "\n", 1); 
-    uart_write_bytes(UART_NUM, text, strlen(text)); 
-    uart_write_bytes(UART_NUM, "\n", 1); 
-    uart_write_bytes(UART_NUM, text, strlen(text)); 
+#define LINE_WIDTH   36   // total characters per line
+#define LEFT_MARGIN  10   // always-empty padding at the start
 
+void print_text(const char *text)
+{
+    static const char spaces[LINE_WIDTH] =
+        "                                    ";      // 36 spaces
+    const int area = LINE_WIDTH - LEFT_MARGIN;       // 26 usable characters
+
+    if (text == NULL) text = "";
+
+    int len = (int)strlen(text);
+    if (len > area) len = area;                      // cut off anything too long
+
+    // Centre within the 26-char area; an odd leftover space goes on the left
+    int pad = LEFT_MARGIN + (area - len + 1) / 2;
+
+    uart_write_bytes(UART_NUM, spaces, pad);         // Leading spaces
+    uart_write_bytes(UART_NUM, text, len);           // Text
+    uart_write_bytes(UART_NUM, "\n", 1);             // Newline (LF)
 }
 
 void JogPrinter() {
@@ -38,7 +50,8 @@ void JogPrinter() {
 }
 void SendTestMessage()
 {
-     printf("sending to thermal\n");
-    print_text("Hello World!");
-    print_text("12345678901234567890123456789012");
+   print_text("     Kabel Sind Cool!");
+   //uart_write_bytes(UART_NUM, "\n", 1); 
+    // uart_write_bytes(UART_NUM, "Test Test Test\n", 15);  
+  
 }

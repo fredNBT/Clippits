@@ -7,6 +7,8 @@ idf_component_register(SRCS  "main.c"
                                 "Screens/Styles.c" 
                                 "Screens/SplashScreen.c"
                                 "Screens/ImportData.c"
+                                "Screens/RFID.c"
+                                "LVGLPortLock.c"
                     PRIV_REQUIRES spi_flash
                     INCLUDE_DIRS
                     "."

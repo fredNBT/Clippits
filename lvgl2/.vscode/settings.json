@@ -4,11 +4,14 @@
     "idf.openOcdConfigs": [
         "board/esp32-wrover-kit-3.3v.cfg"
     ],
-    "idf.portWin": "COM6",
     "idf.toolsPathWin": "C:\\Users\\fred\\.espressif",
     "idf.flashType": "UART",
     "files.associations": {
         "basicimage.h": "c",
-        "esp_lcd_panel_vendor.h": "c"
-    }
+        "esp_lcd_panel_vendor.h": "c",
+        "splashscreen.h": "c"
+    },
+    "idf.currentSetup": "C:\\Espressif\\frameworks\\esp-idf-v5.4",
+    "terminal.integrated.stickyScroll.enabled": false,
+    "idf.port": "COM4"
 }

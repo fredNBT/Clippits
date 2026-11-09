@@ -1,0 +1,118 @@
+[0;32mI (13) boot: ESP-IDF v5.4 2nd stage bootloader[0m
+[0;32mI (13) boot: compile time Aug 27 2026 14:57:25[0m
+[0;32mI (13) boot: Multicore bootloader[0m
+[0;32mI (13) boot: chip revision: v1.1[0m
+[0;32mI (16) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (20) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (23) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (27) boot: Enabling RNG early entropy source...[0m
+[0;32mI (31) boot: Partition Table:[0m
+[0;32mI (34) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (40) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (47) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (53) boot:  2 factory          factory app      00 00 00010000 00177000[0m
+[0;32mI (60) boot: End of partition table[0m
+[0;32mI (63) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4a17ch (303484) map[0m
+[0;32mI (174) esp_image: segment 1: paddr=0005a1a4 vaddr=3ff80000 size=0001ch (    28) load[0m
+[0;32mI (174) esp_image: segment 2: paddr=0005a1c8 vaddr=3ffb0000 size=0431ch ( 17180) load[0m
+[0;32mI (184) esp_image: segment 3: paddr=0005e4ec vaddr=40080000 size=01b2ch (  6956) load[0m
+[0;32mI (188) esp_image: segment 4: paddr=00060020 vaddr=400d0020 size=e52f8h (938744) map[0m
+[0;32mI (514) esp_image: segment 5: paddr=00145320 vaddr=40081b2c size=18bd0h (101328) load[0m
+[0;32mI (566) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (566) boot: Disabling RNG early entropy source...[0m
+[0;32mI (577) cpu_start: Multicore app[0m
+[0;32mI (585) cpu_start: Pro cpu start user code[0m
+[0;32mI (585) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (585) app_init: Application information:[0m
+[0;32mI (585) app_init: Project name:     lvgl2[0m
+[0;32mI (589) app_init: App version:      985aa92a-dirty[0m
+[0;32mI (593) app_init: Compile time:     Aug 27 2026 13:35:37[0m
+[0;32mI (598) app_init: ELF file SHA256:  726e66acb...[0m
+[0;32mI (603) app_init: ESP-IDF:          v5.4[0m
+[0;32mI (606) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (610) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (614) efuse_init: Chip rev:         v1.1[0m
+[0;32mI (618) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (624) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (629) heap_init: At 3FFC9020 len 00016FE0 (91 KiB): DRAM[0m
+[0;32mI (635) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (640) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (645) heap_init: At 4009A6FC len 00005904 (22 KiB): IRAM[0m
+[0;32mI (652) spi_flash: detected chip: generic[0m
+[0;32mI (654) spi_flash: flash io: dio[0m
+[0;32mI (658) main_task: Started on CPU0[0m
+[0;32mI (668) main_task: Calling app_main()[0m
+[0;32mI (668) gpio: GPIO[4]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (668) gpio: GPIO[2]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (678) ili9488: Configuring for BGR color order[0m
+[0;32mI (678) ili9488: new ili9488 panel @0x3ffcdbf0[0m
+[0;32mI (688) ili9488: Setting GPIO:2 to 0[0m
+[0;32mI (698) ili9488: Setting GPIO:2 to 1[0m
+[0;32mI (708) ili9488: Initializing ILI9488[0m
+[0;32mI (908) ili9488: Initialization complete[0m
+[0;32mI (1008) gpio: GPIO[12]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (1008) gpio: GPIO[14]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+🟢 Initializing SPI bus...
+✅ SPI bus initialized!
+🟢 Creating SPI Panel I/O...
+✅ SPI Panel I/O created!
+🟢 Initializing XPT2046 touch...
+✅ Touch initialized successfully!
+[0;32mI (3388) wifi:wifi driver task: 3ffdbf5c, prio:23, stack:6656, core=0[0m
+[0;32mI (3398) wifi:wifi firmware version: 48ea317a7[0m
+[0;32mI (3398) wifi:wifi certification version: v7.0[0m
+[0;32mI (3398) wifi:config NVS flash: enabled[0m
+[0;32mI (3398) wifi:config nano formatting: disabled[0m
+[0;32mI (3408) wifi:Init data frame dynamic rx buffer num: 8[0m
+[0;32mI (3408) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (3408) wifi:Init management short buffer num: 32[0m
+[0;32mI (3418) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (3418) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (3428) wifi:Init static rx buffer num: 3[0m
+[0;32mI (3428) wifi:Init dynamic rx buffer num: 8[0m
+[0;32mI (3438) wifi_init: rx ba win: 6[0m
+[0;32mI (3438) wifi_init: accept mbox: 6[0m
+[0;32mI (3438) wifi_init: tcpip mbox: 32[0m
+[0;32mI (3438) wifi_init: udp mbox: 6[0m
+[0;32mI (3448) wifi_init: tcp mbox: 6[0m
+[0;32mI (3448) wifi_init: tcp tx win: 5760[0m
+[0;32mI (3448) wifi_init: tcp rx win: 5760[0m
+[0;32mI (3458) wifi_init: tcp mss: 1440[0m
+[0;32mI (3458) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (3458) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (3468) phy_init: phy_version 4840,02e0d70,Sep  2 2024,19:39:07[0m
+[0;33mW (3548) phy_init: saving new calibration data because of checksum failure, mode(0)[0m
+[0;32mI (3568) wifi:mode : sta (00:70:07:47:21:50)[0m
+[0;32mI (3568) wifi:enable tsf[0m
+[0;32mI (3568) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (3568) WiFi: WIFI_EVENT_STA_START[0m
+pin highI (3588) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0
+[0;32mI (3588) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (3628) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (3648) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (3738) wifi:connected with Motionlab-Member, aid = 3, channel 1, BW20, bssid = ba:fb:e4:14:ad:a9[0m
+[0;32mI (3738) wifi:security: WPA2-PSK, phy: bgn, rssi: -73[0m
+[0;32mI (3748) wifi:pm start, type: 1[0m
+
+[0;32mI (3748) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (3758) WiFi: WIFI_EVENT_STA_CONNECTED[0m
+[0;32mI (3798) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (4318) wifi:<ba-add>idx:0 (ifx:0, ba:fb:e4:14:ad:a9), tid:6, ssn:3, winSize:64[0m
+[0;32mI (5368) esp_netif_handlers: sta ip: 192.168.13.144, mask: 255.255.248.0, gw: 192.168.8.1[0m
+[0;32mI (5368) WiFi: IP_EVENT_STA_GOT_IP[0m
+[0;32mI (5488) wifi:<ba-add>idx:1 (ifx:0, ba:fb:e4:14:ad:a9), tid:0, ssn:0, winSize:64[0m
+[0;32mI (8578) error: failed to reteive[0m
+[0;32mI (8578) error: failed to reteive[0m
+[0;32mI (8578) error: failed to reteive[0m
+[0;32mI (8578) WiFi: MQTT INIT[0m
+[1;31mE (8588) mqtt_client: No scheme found[0m
+[1;31mE (8588) mqtt_client: Failed to create transport list[0m
+Calibrated: y=456, x=260
+Calibrated: y=457, x=253
+Calibrated: y=457, x=251
+Calibrated: y=457, x=252
+Calibrated: y=457, x=252
+Calibrated: y=458, x=252
+Calibrated: y=458, x=251
+print label eventsending to thermal
+[0;32mI (16178) error: failed to reteive[0m
